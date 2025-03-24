@@ -15,7 +15,7 @@ import { Helmet } from "react-helmet-async";
 //import { paths } from "@/paths";
 import { Header } from "@/components/landing/header";
 // import Testimonial from "@/components/landing/testimonial";
-
+import { HeroSection } from "@/components/landing/hero-section";
 
 export function Page(): React.JSX.Element {
   return (
@@ -28,6 +28,15 @@ export function Page(): React.JSX.Element {
         <Header />
         
         {/* Hero Section */}
+        <HeroSection
+          title="Revolutionize Your HR Management With Cloud-Based Solutions"
+          description="The best HR software for SMB companies and startups to manage employee, payroll assistance, time off, attendance tracking with single software"
+          primaryCtaText="Get started"
+          secondaryCtaText="How it works"
+          imageUrl="/assets/hero-image.png"
+         // onPrimaryCtaClick={handleGetStartedClick}
+          //onSecondaryCtaClick={handleHowItWorksClick}
+        />
         
 
         {/* Trusted By Section */}
