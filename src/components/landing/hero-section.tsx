@@ -65,9 +65,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               
               <Typography
                 variant="h1"
+                color="primary"
                 sx={{
-                  fontSize: { xs: '2.5rem', md: '3.5rem' },
-                  fontWeight: 700,
+                  fontSize: { xs: '2.5rem', md: '2.9rem' },
+                  fontWeight: 500,
                   lineHeight: 1.2,
                   mb: 3,
                 }}
@@ -178,8 +179,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   maxWidth: '100%',
                   height: 'auto',
                   borderRadius: 3,
-                  boxShadow: 'var(--mui-shadows-8)',
-                  border: '1px dashed var(--mui-palette-divider)',
+                  // boxShadow: 'var(--mui-shadows-8)',
+                  // border: '1px dashed var(--mui-palette-divider)',
                   zIndex: 2,
                 }}
               />
