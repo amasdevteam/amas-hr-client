@@ -4,9 +4,11 @@ import { Navigate, type RouteObject } from "react-router-dom";
 import { Page as NotFoundPage } from "@/pages/not-found";
 
 import { route as dashboardRoute } from "./dashboard";
+import { route as landingRoute } from "./landing";
 
 export const routes: RouteObject[] = [
-	{ index: true, element: <Navigate to="/dashboard" /> },
+	landingRoute,
+	// { index: true, element: <Navigate to="/landing" /> },
 	{
 		path: "errors",
 		children: [
@@ -33,6 +35,7 @@ export const routes: RouteObject[] = [
 			},
 		],
 	},
-	dashboardRoute,
+	dashboardRoute, 
+	// landingRoute,
 	{ path: "*", element: <NotFoundPage /> },
 ];
