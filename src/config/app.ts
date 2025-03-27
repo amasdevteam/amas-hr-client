@@ -19,7 +19,7 @@ export interface AppConfig {
 }
 
 export const appConfig: AppConfig = {
-	name: "Devias Kit Pro",
+	name: "AMASHR",
 	description: "",
 	direction: "ltr",
 	language: "en",

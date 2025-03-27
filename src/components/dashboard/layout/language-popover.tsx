@@ -12,18 +12,20 @@ import { setSettings as setPersistedSettings } from "@/lib/settings";
 import { useSettings } from "@/components/core/settings/settings-context";
 import { toast } from "@/components/core/toaster";
 
-export type Language = "en" | "de" | "es";
+export type Language = "en" | "de" | "es" | "sw";
 
 export const languageFlags = {
 	en: "/assets/flag-uk.svg",
 	de: "/assets/flag-de.svg",
 	es: "/assets/flag-es.svg",
+	sw: "/assets/flag-tz.svg",
 } as const;
 
 const languageOptions = {
 	en: { icon: "/assets/flag-uk.svg", label: "English" },
 	de: { icon: "/assets/flag-de.svg", label: "German" },
 	es: { icon: "/assets/flag-es.svg", label: "Spanish" },
+	sw: { icon: "/assets/flag-tz.svg", label: "Swahili" }
 } as const;
 
 export interface LanguagePopoverProps {
