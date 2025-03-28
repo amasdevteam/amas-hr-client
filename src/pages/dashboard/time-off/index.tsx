@@ -7,6 +7,7 @@ import { TimeOffBalancesRow } from '../../../components/dashboard/time-off/time-
 import { UpcomingTimeOff } from '../../../components/dashboard/time-off/upcoming-time-off';
 import { RequestTimeOffForm } from '../../../components/dashboard/time-off/request-time-off-form';
 import { TimeOffCalendar } from '../../../components/dashboard/time-off/time-off-calender';
+import TimeOffHistory from '../../../components/dashboard/time-off/time-off-history';
 
 // Sample data
 const sampleBalances = {
@@ -21,7 +22,7 @@ const sampleUpcomingEvents = [
     date: '2025-03-31',
     title: 'Eid El-Fitr',
     type: 'holiday' as 'holiday',
-    status: 'approved',
+    status: 'approved' as 'approved',
   },
   {
     id: '2',
@@ -45,7 +46,7 @@ const sampleUpcomingEvents = [
     endDate: '2025-05-05',
     title: 'Family Vacation',
     type: 'vacation' as 'vacation',
-    status: 'pending',
+    status: 'pending' as 'pending',
   },
 ];
 
@@ -65,18 +66,40 @@ const calendarEvents = [
   },
 ];
 
+type ViewState = 'dashboard' | 'history' | 'request-form';
+type HistoryType = 'vacation' | 'sick' | 'wfh';
+
 export function Page() {
   const [activeTab, setActiveTab] = useState(0);
-  const [showRequestForm, setShowRequestForm] = useState(false);
+  const [viewState, setViewState] = useState<ViewState>('dashboard');
+  const [historyType, setHistoryType] = useState<HistoryType>('vacation');
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
   };
 
+  const handleRequestTimeOff = () => {
+    setViewState('request-form');
+  };
+
   const handleRequestSubmit = (data: any) => {
     console.log('Submitted request:', data);
-    setShowRequestForm(false);
+    setViewState('dashboard');
     // Here you would typically send the data to your backend
+  };
+
+  const handleRequestCancel = () => {
+    setViewState('dashboard');
+  };
+
+  const handleViewHistory = (type: 'vacation' | 'sick' | 'wfh') => {
+    console.log(`Viewing history for: ${type}`);
+    setHistoryType(type);
+    setViewState('history');
+  };
+
+  const handleBackFromHistory = () => {
+    setViewState('dashboard');
   };
 
   const handleEditEvent = (id: string) => {
@@ -93,26 +116,48 @@ export function Page() {
     <Box sx={{ p: 3 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
         <Typography variant="h4" fontWeight="bold">
-          Time Off
+          {viewState === 'history' 
+            ? historyType === 'vacation' 
+              ? 'Annual Leave History'
+              : historyType === 'sick'
+                ? 'Sick Leave History'
+                : 'Work From Home History'
+            : 'Time Off'}
         </Typography>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={() => setShowRequestForm(true)}
-          sx={{ borderRadius: 2 }}
-        >
-          Request Time Off
-        </Button>
+        
+        {viewState === 'dashboard' && (
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={handleRequestTimeOff}
+            sx={{ borderRadius: 2 }}
+          >
+            Request Time Off
+          </Button>
+        )}
       </Box>
 
-      {showRequestForm ? (
+      {viewState === 'request-form' && (
         <RequestTimeOffForm
           onSubmit={handleRequestSubmit}
-          onCancel={() => setShowRequestForm(false)}
+          onCancel={handleRequestCancel}
         />
-      ) : (
+      )}
+
+      {viewState === 'history' && (
+        <TimeOffHistory
+          type={historyType}
+          onBack={handleBackFromHistory}
+        />
+      )}
+
+      {viewState === 'dashboard' && (
         <>
-          <TimeOffBalancesRow balances={sampleBalances} />
+          <TimeOffBalancesRow 
+            balances={sampleBalances} 
+            onViewHistory={handleViewHistory}
+            onRequest={handleRequestTimeOff}
+          />
 
           <Paper sx={{ mb: 4, borderRadius: 2 }}>
             <Tabs
