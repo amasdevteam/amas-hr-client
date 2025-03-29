@@ -9,16 +9,15 @@ import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import { useTheme } from "@mui/material/styles";
 import { Bell as BellIcon } from "@phosphor-icons/react/dist/ssr/Bell";
 import { List as ListIcon } from "@phosphor-icons/react/dist/ssr/List";
 import { Users as UsersIcon } from "@phosphor-icons/react/dist/ssr/Users";
-import { Calendar as CalendarIcon } from "@phosphor-icons/react/dist/ssr/Calendar";
 import { useTranslation } from "react-i18next";
 
 import type { NavItemConfig } from "@/types/nav";
 import { usePopover } from "@/hooks/use-popover";
 import { usePathname } from "@/hooks/use-pathname";
-import { RouterLink } from "@/components/core/link";
 import { SystemTabs } from "./system-tabs";
 
 import { ContactsPopover } from "../contacts-popover";
@@ -36,312 +35,287 @@ export interface TabItemConfig {
 }
 
 export interface MainNavProps {
-    items: NavItemConfig[];
-    userName?: string;
-    userTitle?: string;
-    userAvatar?: string;
-    onRequestTimeOff?: () => void;
+  items: NavItemConfig[];
+  userName?: string;
+  userTitle?: string;
+  userAvatar?: string;
+  companyLogoSrc?: string;
+  onRequestTimeOff?: () => void;
 }
 
-export function MainNav({ 
-    items, 
-    userName = "Sofia Rivers",
-    userTitle = "Business Analyst",
-    userAvatar = "/assets/avatar.png",
+export function MainNav({
+  items,
+  userName = "Sofia Rivers",
+  userAvatar = "/assets/avatar.png",
+  companyLogoSrc = "/logos/Sanku-Logo.png",
 }: MainNavProps): React.JSX.Element {
-    const [openNav, setOpenNav] = React.useState<boolean>(false);
-    const pathname = usePathname();
-    
-    // Define BambooHR tabs
-    const tabs: TabItemConfig[] = [
-      { key: 'performance', label: 'Performance', href: '/dashboard/performance' },
-      { key: 'training', label: 'Training', href: '/dashboard/training' },
-      { key: 'payroll', label: 'Payroll', href: '/dashboard/payroll' },
-      { key: 'employee', label: 'Employee', href: '/dashboard/employees' },
-      { key: 'job', label: 'Job', href: '/dashboard/job' },
-      { key: 'time-off', label: 'Time Off', href: '/dashboard/time-off' },
-      { key: 'personal', label: 'Personal', href: '/dashboard/personal' },
-      { key: 'emergency', label: 'Emergency', href: '/dashboard/emergency' },
-      { key: 'benefits', label: 'Benefits', href: '/dashboard/benefits' },
-      { key: 'documents', label: 'Documents', href: '/dashboard/documents' },
-    ];
-    
-    // Determine selected tab based on current pathname
-    const selectedTabIndex = React.useMemo(() => {
-      const index = tabs.findIndex(tab => pathname.includes(tab.key));
-      return index !== -1 ? index : 0;
-    }, [pathname, tabs]);
-    
-    // Temporarily force tabs to show for testing
-    // const showTabs = true;
-    
-    // In production, use this condition instead:
-    const showTabs = pathname.includes('dashboard/performance/index') ||
-					 pathname.includes('dashboard/training/index') ||
-					 pathname.includes('dashboard/payroll/index') ||
-					 pathname.includes('dashboard/employees/index') ||
-					 pathname.includes('dashboard/job/index') ||
-					 pathname.includes('dashboard/time-off/index') ||
-					 pathname.includes('dashboard/personal/index') ||
-					 pathname.includes('dashboard/emergency/index') ||
-					 pathname.includes('dashboard/benefits/index') ||
-					 pathname.includes('dashboard/documents/index') ||
-					 pathname.includes('/dashboard') ||
-                	 pathname.includes('/dashboard/overview') ||
-                	 pathname.includes('/dashboard/blank');
-					 
-                    
-    // Handle tab change
-    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-      // You can add navigation logic here if needed
-      console.log('Tab changed to:', tabs[newValue].key);
-      
-      // Navigate to the selected tab's URL
-      if (!tabs[newValue].disabled) {
-        window.location.href = tabs[newValue].href;
-      }
-    };
+  const theme = useTheme();
+  const [openNav, setOpenNav] = React.useState<boolean>(false);
+  const pathname = usePathname();
 
-    return (
-        <React.Fragment>
+  const { t: tNav } = useTranslation("navigation");
+  const { t: tUser } = useTranslation("user");
+  const { t: tCommon } = useTranslation("common");
+
+  const userTitle = tUser("businessAnalyst");
+
+  const tabs: TabItemConfig[] = [
+    { key: "performance", label: tNav("performance"), href: "/dashboard/performance" },
+    { key: "training", label: tNav("training"), href: "/dashboard/training" },
+    { key: "payroll", label: tNav("payroll"), href: "/dashboard/payroll" },
+    { key: "employee", label: tNav("employee"), href: "/dashboard/employees" },
+    { key: "job", label: tNav("job"), href: "/dashboard/job" },
+    { key: "time-off", label: tNav("timeOff"), href: "/dashboard/time-off" },
+    { key: "personal", label: tNav("personal"), href: "/dashboard/personal" },
+    { key: "benefits", label: tNav("benefits"), href: "/dashboard/benefits" },
+    { key: "documents", label: tNav("documents"), href: "/dashboard/documents" },
+  ];
+
+  const selectedTabIndex = React.useMemo(() => {
+    const index = tabs.findIndex((tab) => pathname.includes(tab.key));
+    return index !== -1 ? index : 0;
+  }, [pathname, tabs]);
+
+  const showTabs = pathname.includes("/dashboard");
+
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    if (!tabs[newValue].disabled) {
+      window.location.href = tabs[newValue].href;
+    }
+  };
+
+  return (
+    <>
+      <Box
+        component="header"
+        sx={{
+          bgcolor: theme.palette.background.paper,
+          borderBottom: `1px solid ${theme.palette.divider}`,
+          left: 0,
+          position: "sticky",
+          pt: { lg: "var(--Layout-gap)" },
+          top: 0,
+          width: "100%",
+          zIndex: theme.zIndex.appBar,
+          flexDirection: "column",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            minHeight: "var(--MainNav-height)",
+            px: { xs: 2, lg: 3 },
+            py: 1,
+          }}
+        >
+          <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
             <Box
-                component="header"
-                sx={{
-                    "--MainNav-background": "var(--mui-palette-background-default)",
-                    "--MainNav-divider": "var(--mui-palette-divider)",
-                    bgcolor: "var(--MainNav-background)",
-                    left: 0,
-                    position: "sticky",
-                    pt: { lg: "var(--Layout-gap)" },
-                    top: 0,
-                    width: "100%",
-                    zIndex: "var(--MainNav-zIndex)",
-                    flexDirection: 'column',
-                }}
-            >
-                <Box
-                    sx={{
-                        borderBottom: showTabs ? "none" : "1px solid var(--MainNav-divider)",
-                        display: "flex",
-                        flex: "1 1 auto",
-                        minHeight: "var(--MainNav-height)",
-                        px: { xs: 2, lg: 3 },
-                        py: 1,
-                    }}
-                >
-                    <Stack direction="row" spacing={2} sx={{ alignItems: "center", flex: "1 1 auto" }}>
-                        <IconButton
-                            onClick={(): void => {
-                                setOpenNav(true);
-                            }}
-                            sx={{ display: { lg: "none" } }}
-                        >
-                            <ListIcon />
-                        </IconButton> 
-                    </Stack>
-                    <Stack
-                        direction="row"
-                        spacing={2}
-                        sx={{ alignItems: "center", flex: "1 1 auto", justifyContent: "flex-end" }}
-                    >
-                        {/* BambooHR-inspired available time display */}
-                        {/* <Box 
-                            sx={{ 
-                                display: { xs: 'none', md: 'flex' }, 
-                                alignItems: 'center',
-                                mr: 2,
-                                gap: 1
-                            }}
-                        >
-                            <CalendarIcon />
-                            <Box>
-                                <Typography variant="caption" color="text.secondary">
-                                    Available Time
-                                </Typography>
-                                <Typography variant="body2" fontWeight="medium">
-                                    16 days
-                                </Typography>
-                            </Box>
-                        </Box> */}
-
-                        <NotificationsButton />
-                        <ContactsButton />
-                        <Divider
-                            flexItem
-                            orientation="vertical"
-                            sx={{ borderColor: "var(--MainNav-divider)", display: { xs: "none", lg: "block" } }}
-                        />
-                        <LanguageSwitch />
-                        
-                        {/* BambooHR-inspired user display */}
-                        <UserButton 
-                            userName={userName}
-                            userTitle={userTitle}
-                            userAvatar={userAvatar}
-                        />
-                    </Stack>
-                </Box>
-                
-                {/* BambooHR-style tabs using SystemTabs component */}
-                {showTabs && (
-                  <Box
-                    sx={{
-                      width: '100%',
-                      px: { xs: 2, lg: 3 },
-                      mt: 2, // Add margin to separate tabs from header
-                      mb: 2, // Add margin below tabs
-                    }}
-                  >
-                    <SystemTabs 
-                      selectedTabIndex={selectedTabIndex} 
-                      tabs={tabs} 
-                      onTabChange={handleTabChange} 
-                    />
-                  </Box>
-                )}
-            </Box>
-            <MobileNav
-                items={items}
-                onClose={() => {
-                    setOpenNav(false);
-                }}
-                open={openNav}
+              component="img"
+              src={companyLogoSrc}
+              alt="Company Logo"
+              sx={{
+                height: 40,
+                maxWidth: 160,
+                objectFit: "contain",
+                filter: theme.palette.mode === "dark" ? "brightness(0) invert(1)" : "none",
+              }}
             />
-        </React.Fragment>
-    );
-}
+            <IconButton onClick={() => setOpenNav(true)} sx={{ display: { lg: "none" } }}>
+              <ListIcon />
+            </IconButton>
+          </Stack>
 
+          <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
+            <NotificationsButton />
+            <ContactsButton />
+            <Divider
+              flexItem
+              orientation="vertical"
+              sx={{
+                borderColor: theme.palette.divider,
+                display: { xs: "none", lg: "block" },
+              }}
+            />
+            <LanguageSwitch />
+            <UserButton userName={userName} userTitle={userTitle} userAvatar={userAvatar} />
+          </Stack>
+        </Box>
+
+        {showTabs && (
+          <Box sx={{ width: "100%", px: { xs: 2, lg: 3 }, mt: 2, mb: 2 }}>
+            <SystemTabs
+              selectedTabIndex={selectedTabIndex}
+              tabs={tabs}
+              onTabChange={handleTabChange}
+            />
+          </Box>
+        )}
+      </Box>
+
+      <MobileNav items={items} onClose={() => setOpenNav(false)} open={openNav} />
+    </>
+  );
+}
 
 function ContactsButton(): React.JSX.Element {
-    const popover = usePopover<HTMLButtonElement>();
-
-    return (
-        <React.Fragment>
-            <Tooltip title="Contacts">
-                <IconButton onClick={popover.handleOpen} ref={popover.anchorRef}>
-                    <UsersIcon />
-                </IconButton>
-            </Tooltip>
-            <ContactsPopover anchorEl={popover.anchorRef.current} onClose={popover.handleClose} open={popover.open} />
-        </React.Fragment>
-    );
+  const { t } = useTranslation("common");
+  const popover = usePopover<HTMLButtonElement>();
+  return (
+    <>
+      <Tooltip title={t("contacts")}>
+        <IconButton onClick={popover.handleOpen} ref={popover.anchorRef}>
+          <UsersIcon />
+        </IconButton>
+      </Tooltip>
+      <ContactsPopover
+        anchorEl={popover.anchorRef.current}
+        onClose={popover.handleClose}
+        open={popover.open}
+      />
+    </>
+  );
 }
 
-
 function NotificationsButton(): React.JSX.Element {
-    const popover = usePopover<HTMLButtonElement>();
-
-    return (
-        <React.Fragment>
-            <Tooltip title="Notifications">
-                <Badge
-                    color="error"
-                    sx={{ "& .MuiBadge-dot": { borderRadius: "50%", height: "10px", right: "6px", top: "6px", width: "10px" } }}
-                    variant="dot"
-                >
-                    <IconButton onClick={popover.handleOpen} ref={popover.anchorRef}>
-                        <BellIcon />
-                    </IconButton>
-                </Badge>
-            </Tooltip>
-            <NotificationsPopover anchorEl={popover.anchorRef.current} onClose={popover.handleClose} open={popover.open} />
-        </React.Fragment>
-    );
+  const { t } = useTranslation("common");
+  const popover = usePopover<HTMLButtonElement>();
+  return (
+    <>
+      <Tooltip title={t("notifications")}>
+        <Badge
+          color="error"
+          variant="dot"
+          sx={{
+            "& .MuiBadge-dot": {
+              borderRadius: "50%",
+              height: "10px",
+              right: "6px",
+              top: "6px",
+              width: "10px",
+            },
+          }}
+        >
+          <IconButton onClick={popover.handleOpen} ref={popover.anchorRef}>
+            <BellIcon />
+          </IconButton>
+        </Badge>
+      </Tooltip>
+      <NotificationsPopover
+        anchorEl={popover.anchorRef.current}
+        onClose={popover.handleClose}
+        open={popover.open}
+      />
+    </>
+  );
 }
 
 function LanguageSwitch(): React.JSX.Element {
-    const { i18n } = useTranslation();
-    const popover = usePopover<HTMLButtonElement>();
-    const language = (i18n.language || "en") as Language;
-    const flag = languageFlags[language];
-
-    return (
-        <React.Fragment>
-            <Tooltip title="Language">
-                <IconButton
-                    onClick={popover.handleOpen}
-                    ref={popover.anchorRef}
-                    sx={{ display: { xs: "none", lg: "inline-flex" } }}
-                >
-                    <Box sx={{ height: "24px", width: "24px" }}>
-                        <Box alt={language} component="img" src={flag} sx={{ height: "auto", width: "100%" }} />
-                    </Box>
-                </IconButton>
-            </Tooltip>
-            <LanguagePopover anchorEl={popover.anchorRef.current} onClose={popover.handleClose} open={popover.open} />
-        </React.Fragment>
-    );
+  const { t, i18n } = useTranslation("common");
+  const popover = usePopover<HTMLButtonElement>();
+  const language = (i18n.language || "en") as Language;
+  const flag = languageFlags[language];
+  return (
+    <>
+      <Tooltip title={t("language")}>
+        <IconButton
+          onClick={popover.handleOpen}
+          ref={popover.anchorRef}
+          sx={{ display: { xs: "none", lg: "inline-flex" } }}
+        >
+          <Box sx={{ height: "24px", width: "24px" }}>
+            <Box
+              alt={language}
+              component="img"
+              src={flag}
+              sx={{ height: "auto", width: "100%" }}
+            />
+          </Box>
+        </IconButton>
+      </Tooltip>
+      <LanguagePopover
+        anchorEl={popover.anchorRef.current}
+        onClose={popover.handleClose}
+        open={popover.open}
+      />
+    </>
+  );
 }
 
 interface UserButtonProps {
-    userName: string;
-    userTitle?: string;
-    userAvatar?: string;
+  userName: string;
+  userTitle?: string;
+  userAvatar?: string;
 }
 
-function UserButton({ userName, userTitle, userAvatar }: UserButtonProps): React.JSX.Element {
-    const popover = usePopover<HTMLButtonElement>();
-
-    return (
-        <React.Fragment>
-            <Box
-                component="button"
-                onClick={popover.handleOpen}
-                ref={popover.anchorRef}
-                sx={{ 
-                    border: "none", 
-                    background: "transparent", 
-                    cursor: "pointer", 
-                    p: 0,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 1.5
-                }}
-            >
-                {/* BambooHR-style user info with name and title */}
-                <Box sx={{ 
-                    display: { xs: 'none', md: 'block' },
-                    textAlign: 'right'
-                }}>
-                    <Typography variant="body2" fontWeight="medium" lineHeight={1.2}>
-                        {userName}
-                    </Typography>
-                    {userTitle && (
-                        <Typography variant="caption" color="text.secondary" lineHeight={1.2}>
-                            {userTitle}
-                        </Typography>
-                    )}
-                </Box>
-                
-                <Badge
-                    anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-                    color="success"
-                    sx={{
-                        "& .MuiBadge-dot": {
-                            border: "2px solid var(--MainNav-background)",
-                            borderRadius: "50%",
-                            bottom: "6px",
-                            height: "12px",
-                            right: "6px",
-                            width: "12px",
-                        },
-                    }}
-                    variant="dot"
-                >
-                    <Avatar 
-                        src={userAvatar} 
-                        alt={userName}
-                        sx={{ 
-                            width: 40, 
-                            height: 40,
-                            border: '2px solid var(--mui-palette-primary-main)',
-                        }}
-                    >
-                        {!userAvatar && userName ? userName.charAt(0) : null}
-                    </Avatar>
-                </Badge>
-            </Box>
-            <UserPopover anchorEl={popover.anchorRef.current} onClose={popover.handleClose} open={popover.open} />
-        </React.Fragment>
-    );
+function UserButton({
+  userName,
+  userTitle,
+  userAvatar,
+}: UserButtonProps): React.JSX.Element {
+  const popover = usePopover<HTMLButtonElement>();
+  return (
+    <>
+      <Box
+        component="button"
+        onClick={popover.handleOpen}
+        ref={popover.anchorRef}
+        sx={{
+          border: "none",
+          background: "transparent",
+          cursor: "pointer",
+          p: 0,
+          display: "flex",
+          alignItems: "center",
+          gap: 1.5,
+        }}
+      >
+        <Box sx={{ display: { xs: "none", md: "block" }, textAlign: "right" }}>
+          <Typography variant="body2" fontWeight="medium" lineHeight={1.2}>
+            {userName}
+          </Typography>
+          {userTitle && (
+            <Typography variant="caption" color="text.secondary" lineHeight={1.2}>
+              {userTitle}
+            </Typography>
+          )}
+        </Box>
+        <Badge
+          anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+          color="success"
+          variant="dot"
+          sx={{
+            "& .MuiBadge-dot": {
+              border: "2px solid",
+              borderColor: "background.paper",
+              borderRadius: "50%",
+              bottom: "6px",
+              height: "12px",
+              right: "6px",
+              width: "12px",
+            },
+          }}
+        >
+          <Avatar
+            src={userAvatar}
+            alt={userName}
+            sx={{
+              width: 40,
+              height: 40,
+              border: "2px solid",
+              borderColor: "primary.main",
+            }}
+          >
+            {!userAvatar && userName ? userName.charAt(0) : null}
+          </Avatar>
+        </Badge>
+      </Box>
+      <UserPopover
+        anchorEl={popover.anchorRef.current}
+        onClose={popover.handleClose}
+        open={popover.open}
+      />
+    </>
+  );
 }

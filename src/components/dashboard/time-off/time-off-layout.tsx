@@ -85,7 +85,7 @@ export const TimeOffLayout: React.FC<TimeOffLayoutProps> = ({
             {title}
           </Typography>
           
-          {showRequestButton && (
+          {/* {showRequestButton && (
             <Button
               variant="contained"
               color="primary"
@@ -98,7 +98,7 @@ export const TimeOffLayout: React.FC<TimeOffLayoutProps> = ({
             >
               Request Time Off
             </Button>
-          )}
+          )} */}
         </Toolbar>
       </AppBar>
       

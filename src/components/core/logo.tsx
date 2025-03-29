@@ -22,9 +22,9 @@ export function Logo({ color = "dark", emblem, height = HEIGHT, width = WIDTH }:
 	let url: string;
 
 	if (emblem) {
-		url = color === "light" ? "/assets/logo-emblem1.svg" : "/assets/logo-emblem--dark1.svg";
+		url = color === "light" ? "/assets/amaslogo.png" : "/assets/amaslogo.png";
 	} else {
-		url = color === "light" ? "/assets/logo1.svg" : "/assets/logo--dark1.svg";
+		url = color === "light" ? "/assets/amaslogo.png" : "/assets/amaslogo.png";
 	}
 
 	return <Box alt="logo" component="img" height={height} src={url} width={width} />;
