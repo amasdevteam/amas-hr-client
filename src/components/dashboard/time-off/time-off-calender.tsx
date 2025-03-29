@@ -1,14 +1,14 @@
-// TimeOffCalendar.tsx
+// TimeOffCalendar.tsx - Updated with modern styling
 import React, { useState } from 'react';
 import {
   Box,
   Paper,
   Typography,
   Grid,
-  Badge,
   IconButton,
   Tooltip,
   Chip,
+  useTheme
 } from '@mui/material';
 import {
   ChevronLeft,
@@ -37,22 +37,23 @@ export const TimeOffCalendar: React.FC<TimeOffCalendarProps> = ({
   onDayClick,
   onEventClick,
 }) => {
+  const theme = useTheme();
   const [currentDate, setCurrentDate] = useState(new Date());
   
   const getTypeColor = (type: string) => {
     switch (type) {
       case 'vacation':
-        return '#2e7d32';
+        return theme.palette.success.main;
       case 'sick':
-        return '#d32f2f';
+        return theme.palette.error.main;
       case 'wfh':
-        return '#1976d2';
+        return theme.palette.primary.main;
       case 'holiday':
-        return '#9c27b0';
+        return theme.palette.secondary.main;
       case 'meeting':
-        return '#ed6c02';
+        return theme.palette.warning.main;
       default:
-        return '#757575';
+        return theme.palette.grey[500];
     }
   };
   
@@ -61,11 +62,11 @@ export const TimeOffCalendar: React.FC<TimeOffCalendarProps> = ({
     
     switch (status) {
       case 'approved':
-        return '#4caf50';
+        return theme.palette.success.main;
       case 'pending':
-        return '#ff9800';
+        return theme.palette.warning.main;
       case 'rejected':
-        return '#f44336';
+        return theme.palette.error.main;
       default:
         return undefined;
     }
@@ -77,10 +78,6 @@ export const TimeOffCalendar: React.FC<TimeOffCalendarProps> = ({
 
   const startOfMonth = (date: Date) => {
     return new Date(date.getFullYear(), date.getMonth(), 1);
-  };
-
-  const endOfMonth = (date: Date) => {
-    return new Date(date.getFullYear(), date.getMonth() + 1, 0);
   };
 
   const prevMonth = () => {
@@ -132,7 +129,7 @@ export const TimeOffCalendar: React.FC<TimeOffCalendarProps> = ({
             p: 1,
             border: '1px solid #e0e0e0',
             position: 'relative',
-            backgroundColor: isToday ? 'rgba(25, 118, 210, 0.05)' : 'white',
+            backgroundColor: isToday ? `${theme.palette.primary.light}15` : 'white',
             '&:hover': {
               backgroundColor: 'rgba(0, 0, 0, 0.04)',
               cursor: 'pointer',
@@ -143,14 +140,14 @@ export const TimeOffCalendar: React.FC<TimeOffCalendarProps> = ({
             variant="body2"
             sx={{
               fontWeight: isToday ? 'bold' : 'normal',
-              color: isToday ? 'primary.main' : 'text.primary',
+              color: isToday ? theme.palette.primary.main : 'text.primary',
               display: 'inline-block',
               borderRadius: '50%',
               width: 24,
               height: 24,
               textAlign: 'center',
               lineHeight: '24px',
-              backgroundColor: isToday ? 'rgba(25, 118, 210, 0.1)' : 'transparent',
+              backgroundColor: isToday ? `${theme.palette.primary.light}25` : 'transparent',
             }}
           >
             {day}
@@ -167,7 +164,7 @@ export const TimeOffCalendar: React.FC<TimeOffCalendarProps> = ({
                   sx={{
                     display: 'flex',
                     alignItems: 'center',
-                    backgroundColor: `${getTypeColor(event.type)}20`,
+                    backgroundColor: `${getTypeColor(event.type)}15`,
                     color: getTypeColor(event.type),
                     borderLeft: `3px solid ${getTypeColor(event.type)}`,
                     borderRadius: '2px',
@@ -177,7 +174,7 @@ export const TimeOffCalendar: React.FC<TimeOffCalendarProps> = ({
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
                     '&:hover': {
-                      backgroundColor: `${getTypeColor(event.type)}40`,
+                      backgroundColor: `${getTypeColor(event.type)}25`,
                     },
                   }}
                 >
@@ -235,10 +232,10 @@ export const TimeOffCalendar: React.FC<TimeOffCalendarProps> = ({
   const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   return (
-    <Paper elevation={2} sx={{ borderRadius: 2, overflow: 'hidden' }}>
+    <Paper elevation={0} sx={{ borderRadius: 2, overflow: 'hidden', boxShadow: '0 2px 10px rgba(0,0,0,0.08)' }}>
       <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e0e0e0' }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Event sx={{ mr: 1.5, color: 'primary.main' }} />
+          <Event sx={{ mr: 1.5, color: theme.palette.primary.main }} />
           <Typography variant="h6" fontWeight="medium">
             Time Off Calendar
           </Typography>
@@ -294,7 +291,7 @@ export const TimeOffCalendar: React.FC<TimeOffCalendarProps> = ({
           size="small" 
           label="Vacation" 
           sx={{ 
-            backgroundColor: `${getTypeColor('vacation')}20`, 
+            backgroundColor: `${getTypeColor('vacation')}15`, 
             color: getTypeColor('vacation'),
             '& .MuiChip-label': { px: 1 }
           }} 
@@ -303,7 +300,7 @@ export const TimeOffCalendar: React.FC<TimeOffCalendarProps> = ({
           size="small" 
           label="Sick Leave" 
           sx={{ 
-            backgroundColor: `${getTypeColor('sick')}20`, 
+            backgroundColor: `${getTypeColor('sick')}15`, 
             color: getTypeColor('sick'),
             '& .MuiChip-label': { px: 1 }
           }} 
@@ -312,7 +309,7 @@ export const TimeOffCalendar: React.FC<TimeOffCalendarProps> = ({
           size="small" 
           label="Work From Home" 
           sx={{ 
-            backgroundColor: `${getTypeColor('wfh')}20`, 
+            backgroundColor: `${getTypeColor('wfh')}15`, 
             color: getTypeColor('wfh'),
             '& .MuiChip-label': { px: 1 }
           }} 
@@ -321,7 +318,7 @@ export const TimeOffCalendar: React.FC<TimeOffCalendarProps> = ({
           size="small" 
           label="Holiday" 
           sx={{ 
-            backgroundColor: `${getTypeColor('holiday')}20`, 
+            backgroundColor: `${getTypeColor('holiday')}15`, 
             color: getTypeColor('holiday'),
             '& .MuiChip-label': { px: 1 }
           }} 

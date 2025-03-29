@@ -1,3 +1,4 @@
+// TimeOffBalancesRow.tsx - Keep your existing version with theme updates
 import React from 'react';
 import { 
   Box, 
@@ -5,7 +6,7 @@ import {
   Paper, 
   Grid, 
   Button,
-  ButtonGroup
+  useTheme
 } from '@mui/material';
 import { 
   BeachAccess as VacationIcon, 
@@ -29,6 +30,8 @@ export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({
   onViewHistory,
   onRequest 
 }) => {
+  const theme = useTheme();
+  
   const handleRequest = () => {
     if (onRequest) {
       console.log('Request button clicked');
@@ -52,6 +55,7 @@ export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({
           sx={{
             p: 3,
             borderRadius: 2,
+            boxShadow: '0 2px 10px rgba(0,0,0,0.08)',
             position: 'relative',
             overflow: 'hidden',
             '&::after': {
@@ -61,7 +65,7 @@ export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({
               right: 0,
               width: '40%',
               height: '100%',
-              background: 'linear-gradient(135deg, transparent 50%, rgba(76, 175, 80, 0.1) 50%)',
+              background: `linear-gradient(135deg, transparent 50%, ${theme.palette.success.light}20 50%)`,
               zIndex: 0,
             },
           }}
@@ -72,8 +76,8 @@ export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({
                 display: 'flex',
                 p: 1,
                 mr: 1.5,
-                color: '#4CAF50',
-                backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                color: theme.palette.success.main,
+                backgroundColor: `${theme.palette.success.light}20`,
                 borderRadius: '50%',
               }}
             >
@@ -86,7 +90,7 @@ export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({
 
           <Typography
             variant="h3"
-            color="#4CAF50"
+            color="success.main"
             fontWeight="bold"
             mb={0.5}
             sx={{ display: 'flex', alignItems: 'flex-end' }}
@@ -108,8 +112,8 @@ export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({
               startIcon={<CalendarIcon />}
               onClick={handleRequest}
               sx={{
-                bgcolor: '#4CAF50',
-                '&:hover': { bgcolor: '#43a047' },
+                bgcolor: theme.palette.success.main,
+                '&:hover': { bgcolor: theme.palette.success.dark },
               }}
             >
               Request
@@ -119,9 +123,9 @@ export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({
               size="small"
               onClick={() => handleViewHistory('vacation')}
               sx={{
-                color: '#4CAF50',
-                borderColor: '#4CAF50',
-                '&:hover': { borderColor: '#43a047' },
+                color: theme.palette.success.main,
+                borderColor: theme.palette.success.main,
+                '&:hover': { borderColor: theme.palette.success.dark },
               }}
             >
               History
@@ -137,6 +141,7 @@ export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({
           sx={{
             p: 3,
             borderRadius: 2,
+            boxShadow: '0 2px 10px rgba(0,0,0,0.08)',
             position: 'relative',
             overflow: 'hidden',
             '&::after': {
@@ -146,7 +151,7 @@ export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({
               right: 0,
               width: '40%',
               height: '100%',
-              background: 'linear-gradient(135deg, transparent 50%, rgba(244, 67, 54, 0.1) 50%)',
+              background: `linear-gradient(135deg, transparent 50%, ${theme.palette.error.light}20 50%)`,
               zIndex: 0,
             },
           }}
@@ -157,8 +162,8 @@ export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({
                 display: 'flex',
                 p: 1,
                 mr: 1.5,
-                color: '#F44336',
-                backgroundColor: 'rgba(244, 67, 54, 0.1)',
+                color: theme.palette.error.main,
+                backgroundColor: `${theme.palette.error.light}20`,
                 borderRadius: '50%',
               }}
             >
@@ -171,7 +176,7 @@ export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({
 
           <Typography
             variant="h3"
-            color="#F44336"
+            color="error.main"
             fontWeight="bold"
             mb={0.5}
             sx={{ display: 'flex', alignItems: 'flex-end' }}
@@ -193,8 +198,8 @@ export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({
               startIcon={<CalendarIcon />}
               onClick={handleRequest}
               sx={{
-                bgcolor: '#F44336',
-                '&:hover': { bgcolor: '#E53935' },
+                bgcolor: theme.palette.error.main,
+                '&:hover': { bgcolor: theme.palette.error.dark },
               }}
             >
               Request
@@ -204,9 +209,9 @@ export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({
               size="small"
               onClick={() => handleViewHistory('sick')}
               sx={{
-                color: '#F44336',
-                borderColor: '#F44336',
-                '&:hover': { borderColor: '#E53935' },
+                color: theme.palette.error.main,
+                borderColor: theme.palette.error.main,
+                '&:hover': { borderColor: theme.palette.error.dark },
               }}
             >
               History
@@ -222,6 +227,7 @@ export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({
           sx={{
             p: 3,
             borderRadius: 2,
+            boxShadow: '0 2px 10px rgba(0,0,0,0.08)',
             position: 'relative',
             overflow: 'hidden',
             '&::after': {
@@ -231,7 +237,7 @@ export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({
               right: 0,
               width: '40%',
               height: '100%',
-              background: 'linear-gradient(135deg, transparent 50%, rgba(33, 150, 243, 0.1) 50%)',
+              background: `linear-gradient(135deg, transparent 50%, ${theme.palette.primary.light}20 50%)`,
               zIndex: 0,
             },
           }}
@@ -242,8 +248,8 @@ export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({
                 display: 'flex',
                 p: 1,
                 mr: 1.5,
-                color: '#2196F3',
-                backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                color: theme.palette.primary.main,
+                backgroundColor: `${theme.palette.primary.light}20`,
                 borderRadius: '50%',
               }}
             >
@@ -256,7 +262,7 @@ export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({
 
           <Typography
             variant="h3"
-            color="#2196F3"
+            color="primary.main"
             fontWeight="bold"
             mb={0.5}
             sx={{ display: 'flex', alignItems: 'flex-end' }}
@@ -278,8 +284,8 @@ export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({
               startIcon={<CalendarIcon />}
               onClick={handleRequest}
               sx={{
-                bgcolor: '#2196F3',
-                '&:hover': { bgcolor: '#1E88E5' },
+                bgcolor: theme.palette.primary.main,
+                '&:hover': { bgcolor: theme.palette.primary.dark },
               }}
             >
               Request
@@ -289,9 +295,9 @@ export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({
               size="small"
               onClick={() => handleViewHistory('wfh')}
               sx={{
-                color: '#2196F3',
-                borderColor: '#2196F3',
-                '&:hover': { borderColor: '#1E88E5' },
+                color: theme.palette.primary.main,
+                borderColor: theme.palette.primary.main,
+                '&:hover': { borderColor: theme.palette.primary.dark },
               }}
             >
               History

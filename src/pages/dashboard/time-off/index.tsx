@@ -1,13 +1,26 @@
+// pages/time-off/index.tsx
 import React, { useState } from 'react';
-import { Box, Typography, Button, Grid, Tab, Tabs, Paper } from '@mui/material';
+import { 
+  Box, 
+  Typography, 
+  Button, 
+  Grid, 
+  Tab, 
+  Tabs, 
+  Paper,
+  Dialog,
+  DialogContent 
+} from '@mui/material';
 import { Add as AddIcon, Event as EventIcon } from '@mui/icons-material';
 
 // Import the components
 import { TimeOffBalancesRow } from '../../../components/dashboard/time-off/time-off-balances-row';
+import { TimeOffLayout } from '../../../components/dashboard/time-off/time-off-layout';
 import { UpcomingTimeOff } from '../../../components/dashboard/time-off/upcoming-time-off';
 import { RequestTimeOffForm } from '../../../components/dashboard/time-off/request-time-off-form';
 import { TimeOffCalendar } from '../../../components/dashboard/time-off/time-off-calender';
 import TimeOffHistory from '../../../components/dashboard/time-off/time-off-history';
+import { TeamAbsences } from '../../../components/dashboard/time-off/team-absences';
 
 // Sample data
 const sampleBalances = {
@@ -69,10 +82,12 @@ const calendarEvents = [
 type ViewState = 'dashboard' | 'history' | 'request-form';
 type HistoryType = 'vacation' | 'sick' | 'wfh';
 
+// Updated way to use the layout in index.tsx
 export function Page() {
   const [activeTab, setActiveTab] = useState(0);
   const [viewState, setViewState] = useState<ViewState>('dashboard');
   const [historyType, setHistoryType] = useState<HistoryType>('vacation');
+  const [teamAbsencesOpen, setTeamAbsencesOpen] = useState(false);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
@@ -82,10 +97,17 @@ export function Page() {
     setViewState('request-form');
   };
 
+  const handleViewTeamAbsences = () => {
+    setTeamAbsencesOpen(true);
+  };
+
+  const handleCloseTeamAbsences = () => {
+    setTeamAbsencesOpen(false);
+  };
+
   const handleRequestSubmit = (data: any) => {
     console.log('Submitted request:', data);
     setViewState('dashboard');
-    // Here you would typically send the data to your backend
   };
 
   const handleRequestCancel = () => {
@@ -93,7 +115,6 @@ export function Page() {
   };
 
   const handleViewHistory = (type: 'vacation' | 'sick' | 'wfh') => {
-    console.log(`Viewing history for: ${type}`);
     setHistoryType(type);
     setViewState('history');
   };
@@ -102,94 +123,107 @@ export function Page() {
     setViewState('dashboard');
   };
 
-  const handleEditEvent = (id: string) => {
-    console.log('Edit event:', id);
-    // Implement edit functionality
-  };
-
-  const handleCancelEvent = (id: string) => {
-    console.log('Cancel event:', id);
-    // Implement cancel functionality
+  const getTitle = () => {
+    if (viewState === 'history') {
+      return historyType === 'vacation' 
+        ? 'Annual Leave History'
+        : historyType === 'sick'
+          ? 'Sick Leave History'
+          : 'Work From Home History';
+    }
+    if (viewState === 'request-form') {
+      return 'Request Time Off';
+    }
+    return 'Time Off';
   };
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-        <Typography variant="h4" fontWeight="bold">
-          {viewState === 'history' 
-            ? historyType === 'vacation' 
-              ? 'Annual Leave History'
-              : historyType === 'sick'
-                ? 'Sick Leave History'
-                : 'Work From Home History'
-            : 'Time Off'}
-        </Typography>
-        
-        {viewState === 'dashboard' && (
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={handleRequestTimeOff}
-            sx={{ borderRadius: 2 }}
-          >
-            Request Time Off
-          </Button>
-        )}
-      </Box>
-
-      {viewState === 'request-form' && (
-        <RequestTimeOffForm
-          onSubmit={handleRequestSubmit}
-          onCancel={handleRequestCancel}
-        />
-      )}
-
-      {viewState === 'history' && (
-        <TimeOffHistory
-          type={historyType}
-          onBack={handleBackFromHistory}
-        />
-      )}
-
-      {viewState === 'dashboard' && (
-        <>
-          <TimeOffBalancesRow 
-            balances={sampleBalances} 
-            onViewHistory={handleViewHistory}
-            onRequest={handleRequestTimeOff}
+    <>
+      <TimeOffLayout 
+        title={getTitle()}
+        onRequestTimeOff={handleRequestTimeOff}
+        onViewTeamAbsences={handleViewTeamAbsences}
+        showRequestButton={viewState === 'dashboard'}
+      >
+        {viewState === 'request-form' && (
+          <RequestTimeOffForm
+            onSubmit={handleRequestSubmit}
+            onCancel={handleRequestCancel}
           />
+        )}
 
-          <Paper sx={{ mb: 4, borderRadius: 2 }}>
-            <Tabs
-              value={activeTab}
-              onChange={handleTabChange}
-              variant="fullWidth"
-              sx={{ borderBottom: '1px solid #e0e0e0' }}
+        {viewState === 'history' && (
+          <TimeOffHistory
+            type={historyType}
+            onBack={handleBackFromHistory}
+          />
+        )}
+
+        {viewState === 'dashboard' && (
+          <>
+            <TimeOffBalancesRow 
+              balances={sampleBalances} 
+              onViewHistory={handleViewHistory}
+              onRequest={handleRequestTimeOff}
+            />
+
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                mb: 4, 
+                borderRadius: 2,
+                boxShadow: '0 2px 10px rgba(0,0,0,0.08)',
+                overflow: 'hidden'
+              }}
             >
-              <Tab label="Upcoming" icon={<EventIcon />} iconPosition="start" />
-              <Tab label="Calendar" />
-            </Tabs>
-            
-            <Box sx={{ p: { xs: 1, sm: 2 } }}>
-              {activeTab === 0 && (
-                <UpcomingTimeOff 
-                  events={sampleUpcomingEvents} 
-                  onEdit={handleEditEvent}
-                  onCancel={handleCancelEvent}
-                />
-              )}
+              <Tabs
+                value={activeTab}
+                onChange={handleTabChange}
+                variant="fullWidth"
+                sx={{ 
+                  borderBottom: '1px solid #e0e0e0',
+                  '& .MuiTab-root': {
+                    py: 1.5
+                  }
+                }}
+              >
+                <Tab label="Upcoming" icon={<EventIcon />} iconPosition="start" />
+                <Tab label="Calendar" />
+              </Tabs>
               
-              {activeTab === 1 && (
-                <TimeOffCalendar 
-                  events={calendarEvents}
-                  onDayClick={(date) => console.log('Clicked day:', date)}
-                  onEventClick={(event) => console.log('Clicked event:', event)}
-                />
-              )}
-            </Box>
-          </Paper>
-        </>
-      )}
-    </Box>
+              <Box sx={{ p: { xs: 1, sm: 2 } }}>
+                {activeTab === 0 && (
+                  <UpcomingTimeOff 
+                    events={sampleUpcomingEvents} 
+                    onEdit={(id) => console.log('Edit event:', id)}
+                    onCancel={(id) => console.log('Cancel event:', id)}
+                  />
+                )}
+                
+                {activeTab === 1 && (
+                  <TimeOffCalendar 
+                    events={calendarEvents}
+                    onDayClick={(date) => console.log('Clicked day:', date)}
+                    onEventClick={(event) => console.log('Clicked event:', event)}
+                  />
+                )}
+              </Box>
+            </Paper>
+          </>
+        )}
+      </TimeOffLayout>
+
+      {/* Team Absences Dialog */}
+      <Dialog 
+        open={teamAbsencesOpen} 
+        onClose={handleCloseTeamAbsences}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogContent sx={{ p: 0 }}>
+          <TeamAbsences onClose={handleCloseTeamAbsences} />
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

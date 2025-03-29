@@ -1,4 +1,4 @@
-// UpcomingTimeOff.tsx
+// UpcomingTimeOff.tsx - Updated version with modern styling
 import React from 'react';
 import { 
   Box, 
@@ -11,8 +11,10 @@ import {
   Chip,
   Divider,
   IconButton,
-  Tooltip
+  Tooltip,
+  useTheme
 } from '@mui/material';
+import { PaletteColor } from '@mui/material/styles';
 import { 
   EventNote, 
   EventAvailable, 
@@ -44,31 +46,33 @@ export const UpcomingTimeOff: React.FC<UpcomingTimeOffProps> = ({
   onEdit,
   onCancel,
 }) => {
+  const theme = useTheme();
+  
   const getTypeIcon = (type: string) => {
     switch (type) {
       case 'vacation':
-        return <BeachAccess color="success" />;
+        return <BeachAccess sx={{ color: theme.palette.success.main }} />;
       case 'sick':
-        return <NoMeetingRoom color="error" />;
+        return <NoMeetingRoom sx={{ color: theme.palette.error.main }} />;
       case 'wfh':
-        return <HomeWork color="primary" />;
+        return <HomeWork sx={{ color: theme.palette.primary.main }} />;
       case 'holiday':
-        return <Celebration color="secondary" />;
+        return <Celebration sx={{ color: theme.palette.secondary.main }} />;
       default:
         return <EventNote />;
     }
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: string): PaletteColor => {
     switch (status) {
       case 'approved':
-        return 'success';
+        return theme.palette.success;
       case 'pending':
-        return 'warning';
+        return theme.palette.warning;
       case 'rejected':
-        return 'error';
+        return theme.palette.error;
       default:
-        return 'default';
+        return theme.palette.grey as unknown as PaletteColor;
     }
   };
 
@@ -91,9 +95,9 @@ export const UpcomingTimeOff: React.FC<UpcomingTimeOffProps> = ({
   };
 
   return (
-    <Paper elevation={2} sx={{ borderRadius: 2, overflow: 'hidden' }}>
+    <Paper elevation={0} sx={{ borderRadius: 2, overflow: 'hidden' }}>
       <Box sx={{ p: 2, backgroundColor: '#f5f5f5', display: 'flex', alignItems: 'center' }}>
-        <EventAvailable sx={{ mr: 1.5, color: 'primary.main' }} />
+        <EventAvailable sx={{ mr: 1.5, color: theme.palette.primary.main }} />
         <Typography variant="h6" fontWeight="medium">
           Upcoming Time Off
         </Typography>
@@ -159,8 +163,13 @@ export const UpcomingTimeOff: React.FC<UpcomingTimeOffProps> = ({
                       <Chip
                         label={event.status}
                         size="small"
-                        color={getStatusColor(event.status) as any}
-                        sx={{ ml: 1, height: 20, fontSize: '0.7rem' }}
+                        sx={{ 
+                          ml: 1, 
+                          height: 20, 
+                          fontSize: '0.7rem',
+                          bgcolor: `${getStatusColor(event.status).light}20`,
+                          color: getStatusColor(event.status).main
+                        }}
                       />
                     </Box>
                   }
