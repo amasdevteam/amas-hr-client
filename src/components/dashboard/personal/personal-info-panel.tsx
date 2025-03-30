@@ -11,14 +11,73 @@ import {
   Button,
   IconButton,
   Stack,
+  FormHelperText,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 
-function TabPanel(props: {
+// Validation functions
+const validateNationalId = (id: string): string | null => {
+  // Tanzanian National ID validation (20 digits)
+  if (!id) return "National ID is required";
+  if (!/^\d{20}$/.test(id)) return "National ID must be 20 digits";
+  return null;
+};
+
+const validateNSSF = (nssf: string): string | null => {
+  // NSSF validation (typically 13 digits starting with NS or NSSF)
+  if (!nssf) return "NSSF is required";
+  if (!/^(NS|NSSF)?\d{13}$/.test(nssf)) return "NSSF must be 13 digits, may start with NS or NSSF";
+  return null;
+};
+
+const validateTIN = (tin: string): string | null => {
+  // TIN validation (9 digits for Tanzania)
+  if (!tin) return "TIN is required";
+  if (!/^\d{9}$/.test(tin)) return "TIN must be 9 digits";
+  return null;
+};
+
+const validateDriverLicense = (license: string): string | null => {
+  // Tanzania driver license (typically starts with T followed by 11 digits)
+  if (!license) return "Driver license is required";
+  if (!/^T\d{11}$/.test(license)) return "Driver license must start with T followed by 11 digits";
+  return null;
+};
+
+const validatePhone = (phone: string): string | null => {
+  // Tanzania phone number validation
+  if (!phone) return "Phone number is required";
+  if (!/^\+255-[67]\d{2}-\d{3}-\d{3}$/.test(phone)) 
+    return "Phone number must be in format +255-7XX-XXX-XXX or +255-6XX-XXX-XXX";
+  return null;
+};
+
+const validateEmail = (email: string): string | null => {
+  if (!email) return "Email is required";
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return "Invalid email format";
+  return null;
+};
+
+// Tanzanian regions
+const tanzaniaRegions = [
+  "Arusha", "Dar es Salaam", "Dodoma", "Geita", "Iringa", "Kagera", "Katavi",
+  "Kigoma", "Kilimanjaro", "Lindi", "Manyara", "Mara", "Mbeya", "Morogoro",
+  "Mtwara", "Mwanza", "Njombe", "Pemba North", "Pemba South", "Pwani",
+  "Rukwa", "Ruvuma", "Shinyanga", "Simiyu", "Singida", "Songwe", "Tabora",
+  "Tanga", "Zanzibar Central/South", "Zanzibar North", "Zanzibar Urban/West"
+];
+
+interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
   value: number;
-}) {
+}
+
+function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
   return (
     <div role="tabpanel" hidden={value !== index} {...other}>
@@ -27,45 +86,82 @@ function TabPanel(props: {
   );
 }
 
+interface ErrorState {
+  nationalId: string | null;
+  nssf: string | null;
+  tin: string | null;
+  driverLicense: string | null;
+  phone: string | null;
+  email: string | null;
+  [key: string]: string | null;
+}
+
+// Define File interface for documents
+interface FormDataType {
+  fullName: string;
+  email: string;
+  phone: string;
+  dob: string;
+  nationality: string;
+  maritalStatus: string;
+  nationalId: string;
+  nssf: string;
+  tin: string;
+  driverLicense: string;
+  address: {
+    street: string;
+    city: string;
+    region: string;
+    postalCode: string;
+    ward: string;
+  };
+  emergency: {
+    name: string;
+    relationship: string;
+    phone: string;
+    email: string;
+  };
+  social: {
+    linkedin: string;
+    twitter: string;
+    facebook: string;
+    github: string;
+  };
+  education: {
+    institution: string;
+    degree: string;
+    field: string;
+    year: number;
+  };
+  documents: File[];
+}
+
 export const PersonalInfoPanel: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
 
-  interface FormData {
-    fullName: string;
-    email: string;
-    phone: string;
-    dob: string;
-    nationality: string;
-    maritalStatus: string;
-    emergency: {
-      name: string;
-      relationship: string;
-      phone: string;
-      email: string;
-    };
-    social: {
-      linkedin: string;
-      twitter: string;
-      facebook: string;
-      github: string;
-    };
-    education: {
-      institution: string;
-      degree: string;
-      field: string;
-      year: number;
-    };
-    documents: File[];
-  }
-
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<FormDataType>({
     fullName: "Emmanuel Muro",
     email: "emuro@sanku.com",
     phone: "+255-712-345-678",
     dob: "1990-01-01",
     nationality: "Tanzanian",
     maritalStatus: "Single",
+    
+    // Added fields for Tanzanian context
+    nationalId: "12345678901234567890",
+    nssf: "NSSF1234567890123",
+    tin: "123456789",
+    driverLicense: "T12345678901",
+    
+    // Address information
+    address: {
+      street: "123 Uhuru Street",
+      city: "Dar es Salaam",
+      region: "Dar es Salaam",
+      postalCode: "12345",
+      ward: "Kinondoni",
+    },
 
     emergency: {
       name: "John Doe",
@@ -91,31 +187,89 @@ export const PersonalInfoPanel: React.FC = () => {
     documents: [],
   });
 
+  const [errors, setErrors] = useState<ErrorState>({
+    nationalId: null,
+    nssf: null,
+    tin: null,
+    driverLicense: null,
+    phone: null,
+    email: null,
+  });
+
+  // Validate form before saving
+  const validateForm = () => {
+    const newErrors: ErrorState = {
+      nationalId: validateNationalId(formData.nationalId),
+      nssf: validateNSSF(formData.nssf),
+      tin: validateTIN(formData.tin),
+      driverLicense: validateDriverLicense(formData.driverLicense),
+      phone: validatePhone(formData.phone),
+      email: validateEmail(formData.email),
+    };
+
+    setErrors(newErrors);
+    
+    // Check if there are any errors
+    return !Object.values(newErrors).some(error => error !== null);
+  };
 
   const handleChange = (
-    section: keyof FormData | "main",
+    section: string,
     key: string,
     value: string | number
   ) => {
     if (section === "main") {
       setFormData((prev) => ({ ...prev, [key]: value }));
-    } else {
-      setFormData((prev) => {
-        const sectionData = prev[section];
-        if (typeof sectionData === "object" && sectionData !== null) {
-          return {
-            ...prev,
-            [section]: {
-              ...sectionData,
-              [key]: value,
-            },
-          };
+      
+      // Validate field after change
+      if (key === "nationalId" || key === "nssf" || key === "tin" || 
+          key === "driverLicense" || key === "phone" || key === "email") {
+        let validationError = null;
+        
+        switch (key) {
+          case "nationalId": 
+            validationError = validateNationalId(value as string);
+            break;
+          case "nssf": 
+            validationError = validateNSSF(value as string);
+            break;
+          case "tin": 
+            validationError = validateTIN(value as string);
+            break;
+          case "driverLicense": 
+            validationError = validateDriverLicense(value as string);
+            break;
+          case "phone": 
+            validationError = validatePhone(value as string);
+            break;
+          case "email": 
+            validationError = validateEmail(value as string);
+            break;
         }
-        return prev;
-      });
+        
+        setErrors(prev => ({
+          ...prev,
+          [key]: validationError
+        }));
+      }
+    } else if (section === "address") {
+      setFormData((prev) => ({
+        ...prev,
+        address: {
+          ...prev.address,
+          [key]: value,
+        },
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [section]: {
+          ...(prev[section as keyof FormDataType] as Record<string, unknown>),
+          [key]: value,
+        },
+      }));
     }
   };
-  
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -132,8 +286,14 @@ export const PersonalInfoPanel: React.FC = () => {
   };
 
   const handleSave = () => {
-    console.log("Saved data:", formData);
-    setIsEditing(false);
+    const isValid = validateForm();
+    
+    if (isValid) {
+      console.log("Saved data:", formData);
+      setIsEditing(false);
+    } else {
+      console.log("Form contains errors");
+    }
   };
 
   return (
@@ -155,6 +315,8 @@ export const PersonalInfoPanel: React.FC = () => {
         allowScrollButtonsMobile
       >
         <Tab label="Basic Info" />
+        <Tab label="Identification" />
+        <Tab label="Address" />
         <Tab label="Emergency Contact" />
         <Tab label="Social Links" />
         <Tab label="Education" />
@@ -171,6 +333,7 @@ export const PersonalInfoPanel: React.FC = () => {
               onChange={(e) => handleChange("main", "fullName", e.target.value)}
               fullWidth
               disabled={!isEditing}
+              required
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -180,6 +343,9 @@ export const PersonalInfoPanel: React.FC = () => {
               onChange={(e) => handleChange("main", "email", e.target.value)}
               fullWidth
               disabled={!isEditing}
+              required
+              error={!!errors.email}
+              helperText={errors.email || ''}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -189,6 +355,9 @@ export const PersonalInfoPanel: React.FC = () => {
               onChange={(e) => handleChange("main", "phone", e.target.value)}
               fullWidth
               disabled={!isEditing}
+              required
+              error={!!errors.phone}
+              helperText={errors.phone || 'Format: +255-7XX-XXX-XXX'}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -200,6 +369,7 @@ export const PersonalInfoPanel: React.FC = () => {
               InputLabelProps={{ shrink: true }}
               fullWidth
               disabled={!isEditing}
+              required
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -218,13 +388,130 @@ export const PersonalInfoPanel: React.FC = () => {
               onChange={(e) => handleChange("main", "maritalStatus", e.target.value)}
               fullWidth
               disabled={!isEditing}
+              select
+            >
+              <MenuItem value="Single">Single</MenuItem>
+              <MenuItem value="Married">Married</MenuItem>
+              <MenuItem value="Divorced">Divorced</MenuItem>
+              <MenuItem value="Widowed">Widowed</MenuItem>
+            </TextField>
+          </Grid>
+        </Grid>
+      </TabPanel>
+
+      {/* IDENTIFICATION - New Tab */}
+      <TabPanel value={activeTab} index={1}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="National ID Number"
+              value={formData.nationalId}
+              onChange={(e) => handleChange("main", "nationalId", e.target.value)}
+              fullWidth
+              disabled={!isEditing}
+              required
+              error={!!errors.nationalId}
+              helperText={errors.nationalId || '20 digits required'}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="NSSF Number"
+              value={formData.nssf}
+              onChange={(e) => handleChange("main", "nssf", e.target.value)}
+              fullWidth
+              disabled={!isEditing}
+              required
+              error={!!errors.nssf}
+              helperText={errors.nssf || 'Format: NSSF13digits or NS13digits or 13digits'}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="TIN (Tax Identification Number)"
+              value={formData.tin}
+              onChange={(e) => handleChange("main", "tin", e.target.value)}
+              fullWidth
+              disabled={!isEditing}
+              required
+              error={!!errors.tin}
+              helperText={errors.tin || '9 digits required'}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Driver's License Number"
+              value={formData.driverLicense}
+              onChange={(e) => handleChange("main", "driverLicense", e.target.value)}
+              fullWidth
+              disabled={!isEditing}
+              error={!!errors.driverLicense}
+              helperText={errors.driverLicense || 'Format: T11digits'}
+            />
+          </Grid>
+        </Grid>
+      </TabPanel>
+
+      {/* ADDRESS - New Tab */}
+      <TabPanel value={activeTab} index={2}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <TextField
+              label="Street Address"
+              value={formData.address.street}
+              onChange={(e) => handleChange("address", "street", e.target.value)}
+              fullWidth
+              disabled={!isEditing}
+              required
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="City/Town"
+              value={formData.address.city}
+              onChange={(e) => handleChange("address", "city", e.target.value)}
+              fullWidth
+              disabled={!isEditing}
+              required
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth disabled={!isEditing} required>
+              <InputLabel>Region</InputLabel>
+              <Select
+                value={formData.address.region}
+                label="Region"
+                onChange={(e) => handleChange("address", "region", e.target.value)}
+              >
+                {tanzaniaRegions.map(region => (
+                  <MenuItem key={region} value={region}>{region}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Postal Code"
+              value={formData.address.postalCode}
+              onChange={(e) => handleChange("address", "postalCode", e.target.value)}
+              fullWidth
+              disabled={!isEditing}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Ward"
+              value={formData.address.ward}
+              onChange={(e) => handleChange("address", "ward", e.target.value)}
+              fullWidth
+              disabled={!isEditing}
             />
           </Grid>
         </Grid>
       </TabPanel>
 
       {/* EMERGENCY CONTACT */}
-      <TabPanel value={activeTab} index={1}>
+      <TabPanel value={activeTab} index={3}>
         <Typography variant="subtitle1" gutterBottom>Primary Contact</Typography>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
@@ -234,6 +521,7 @@ export const PersonalInfoPanel: React.FC = () => {
               onChange={(e) => handleChange("emergency", "name", e.target.value)}
               fullWidth
               disabled={!isEditing}
+              required
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -243,6 +531,7 @@ export const PersonalInfoPanel: React.FC = () => {
               onChange={(e) => handleChange("emergency", "relationship", e.target.value)}
               fullWidth
               disabled={!isEditing}
+              required
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -252,6 +541,7 @@ export const PersonalInfoPanel: React.FC = () => {
               onChange={(e) => handleChange("emergency", "phone", e.target.value)}
               fullWidth
               disabled={!isEditing}
+              required
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -267,7 +557,7 @@ export const PersonalInfoPanel: React.FC = () => {
       </TabPanel>
 
       {/* SOCIAL LINKS */}
-      <TabPanel value={activeTab} index={2}>
+      <TabPanel value={activeTab} index={4}>
         <Grid container spacing={2}>
           {Object.entries(formData.social).map(([key, val]) => (
             <Grid item xs={12} sm={6} key={key}>
@@ -284,8 +574,7 @@ export const PersonalInfoPanel: React.FC = () => {
       </TabPanel>
 
       {/* EDUCATION */}
-      <TabPanel value={activeTab} index={3}>
-        <Divider sx={{ my: 1 }} />
+      <TabPanel value={activeTab} index={5}>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             <TextField
@@ -328,7 +617,7 @@ export const PersonalInfoPanel: React.FC = () => {
       </TabPanel>
 
       {/* DOCUMENTS */}
-      <TabPanel value={activeTab} index={4}>
+      <TabPanel value={activeTab} index={6}>
         <Typography variant="body2" gutterBottom>
           Upload your documents (e.g., ID, Passport, Certificates)
         </Typography>
