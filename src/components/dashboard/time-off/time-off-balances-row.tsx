@@ -12,6 +12,9 @@ import {
 } from '@mui/material';
 import { 
   CalendarMonth as CalendarIcon,
+  BeachAccess,
+  SickOutlined,
+  Home
 } from '@mui/icons-material';
 
 interface TimeOffBalancesRowProps {
@@ -62,9 +65,9 @@ export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({
           <Box sx={{ display: 'flex', height: '100%' }}>
             <Box sx={{ 
               display: 'flex', 
-              flexDirection: 'column', 
-              alignItems: 'flex-start', 
-              justifyContent: 'center',
+              flexDirection: 'row', 
+              alignItems: 'center', 
+              justifyContent: 'flex-start',
               pl: 3,
               pr: 4
             }}>
@@ -75,12 +78,12 @@ export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({
                 bgcolor: '#4CAF50', 
                 p: 2,
                 borderRadius: 2,
-                mb: 2
+                mr: 3
               }}>
-                <CalendarIcon sx={{ color: 'white', fontSize: 36 }} />
+                <CalendarIcon sx={{ color: 'white', fontSize: 28 }} />
               </Box>
               <Box>
-                <Typography variant="h4" component="div" fontWeight="bold">
+                <Typography variant="h4" component="div" fontWeight="500">
                   {balances.vacation} Days
                 </Typography>
                 <Typography variant="subtitle1" color="text.secondary">
@@ -98,10 +101,10 @@ export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({
               flexGrow: 1,
               px: 3
             }}>
-              <Typography variant="h4" fontWeight="bold" sx={{ mb: 1 }}>
+              <Typography variant="h4" fontWeight="500" sx={{ mb: 1 }}>
                 {taken.vacation} Days Taken
               </Typography>
-              <Typography variant="h4" fontWeight="bold" sx={{ display: 'flex', alignItems: 'baseline' }}>
+              <Typography variant="h4" fontWeight="500" sx={{ display: 'flex', alignItems: 'baseline' }}>
                 {percentages.vacation}
                 <Typography component="span" variant="h6" color="text.secondary" sx={{ ml: 1 }}>
                   % Balance
@@ -156,9 +159,9 @@ export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({
           <Box sx={{ display: 'flex', height: '100%' }}>
             <Box sx={{ 
               display: 'flex', 
-              flexDirection: 'column', 
-              alignItems: 'flex-start', 
-              justifyContent: 'center',
+              flexDirection: 'row', 
+              alignItems: 'center', 
+              justifyContent: 'flex-start',
               pl: 3,
               pr: 4
             }}>
@@ -169,12 +172,12 @@ export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({
                 bgcolor: theme.palette.error.main, 
                 p: 2,
                 borderRadius: 2,
-                mb: 2
+                mr: 3
               }}>
-                <CalendarIcon sx={{ color: 'white', fontSize: 36 }} />
+                <CalendarIcon sx={{ color: 'white', fontSize: 28 }} />
               </Box>
               <Box>
-                <Typography variant="h4" component="div" fontWeight="bold">
+                <Typography variant="h4" component="div" fontWeight="500">
                   {balances.sick} Days
                 </Typography>
                 <Typography variant="subtitle1" color="text.secondary">
@@ -192,10 +195,10 @@ export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({
               flexGrow: 1,
               px: 3
             }}>
-              <Typography variant="h4" fontWeight="bold" sx={{ mb: 1 }}>
+              <Typography variant="h4" fontWeight="500" sx={{ mb: 1 }}>
                 {taken.sick} Days Taken
               </Typography>
-              <Typography variant="h4" fontWeight="bold" sx={{ display: 'flex', alignItems: 'baseline' }}>
+              <Typography variant="h4" fontWeight="500" sx={{ display: 'flex', alignItems: 'baseline' }}>
                 {percentages.sick}
                 <Typography component="span" variant="h6" color="text.secondary" sx={{ ml: 1 }}>
                   % Balance
@@ -250,9 +253,9 @@ export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({
           <Box sx={{ display: 'flex', height: '100%' }}>
             <Box sx={{ 
               display: 'flex', 
-              flexDirection: 'column', 
-              alignItems: 'flex-start', 
-              justifyContent: 'center',
+              flexDirection: 'row', 
+              alignItems: 'center', 
+              justifyContent: 'flex-start',
               pl: 3,
               pr: 4
             }}>
@@ -263,12 +266,12 @@ export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({
                 bgcolor: theme.palette.primary.main, 
                 p: 2,
                 borderRadius: 2,
-                mb: 2
+                mr: 3
               }}>
-                <CalendarIcon sx={{ color: 'white', fontSize: 36 }} />
+                <CalendarIcon sx={{ color: 'white', fontSize: 28 }} />
               </Box>
               <Box>
-                <Typography variant="h4" component="div" fontWeight="bold">
+                <Typography variant="h4" component="div" fontWeight="500">
                   {balances.workFromHome} Days
                 </Typography>
                 <Typography variant="subtitle1" color="text.secondary">
@@ -286,10 +289,10 @@ export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({
               flexGrow: 1,
               px: 3
             }}>
-              <Typography variant="h4" fontWeight="bold" sx={{ mb: 1 }}>
+              <Typography variant="h4" fontWeight="500" sx={{ mb: 1 }}>
                 {taken.workFromHome} Days Taken
               </Typography>
-              <Typography variant="h4" fontWeight="bold" sx={{ display: 'flex', alignItems: 'baseline' }}>
+              <Typography variant="h4" fontWeight="500" sx={{ display: 'flex', alignItems: 'baseline' }}>
                 {percentages.workFromHome}
                 <Typography component="span" variant="h6" color="text.secondary" sx={{ ml: 1 }}>
                   % Balance
@@ -364,22 +367,22 @@ export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({
                 '& .MuiTab-root': {
                   textTransform: 'none',
                   fontSize: '1.25rem',
-                  fontWeight: 500,
+                  fontWeight: 400,
                   px: 4,
                   py: 2,
                 },
                 '& .Mui-selected': {
                   color: '#1976d2',
-                  fontWeight: 700,
+                  fontWeight: 500,
                 },
                 '& .MuiTabs-indicator': {
                   height: 3,
                 },
               }}
             >
-              <Tab label="Annual" />
-              <Tab label="Sick" />
-              <Tab label="WFH" />
+              <Tab icon={<BeachAccess />} label="Annual" iconPosition="start" />
+              <Tab icon={<SickOutlined />} label="Sick" iconPosition="start" />
+              <Tab icon={<Home />} label="WFH" iconPosition="start" />
             </Tabs>
           </Box>
           <Box sx={{ p: 0, height: '180px' }}>
