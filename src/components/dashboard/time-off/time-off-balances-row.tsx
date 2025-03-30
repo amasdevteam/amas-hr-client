@@ -1,4 +1,3 @@
-// TimeOffBalancesRow.tsx - Keep your existing version with theme updates
 import React from 'react';
 import { 
   Box, 
@@ -6,17 +5,27 @@ import {
   Paper, 
   Grid, 
   Button,
-  useTheme
+  Divider,
+  useTheme,
+  Tabs,
+  Tab
 } from '@mui/material';
 import { 
-  BeachAccess as VacationIcon, 
-  SickOutlined as SickIcon, 
-  Home as HomeIcon,
-  CalendarToday as CalendarIcon
+  CalendarMonth as CalendarIcon,
 } from '@mui/icons-material';
 
 interface TimeOffBalancesRowProps {
   balances: {
+    vacation: number;
+    sick: number;
+    workFromHome: number;
+  };
+  taken: {
+    vacation: number;
+    sick: number;
+    workFromHome: number;
+  };
+  percentages: {
     vacation: number;
     sick: number;
     workFromHome: number;
@@ -27,10 +36,13 @@ interface TimeOffBalancesRowProps {
 
 export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({ 
   balances, 
+  taken = { vacation: 5, sick: 2, workFromHome: 3 },
+  percentages = { vacation: 68, sick: 75, workFromHome: 80 },
   onViewHistory,
   onRequest 
 }) => {
   const theme = useTheme();
+  const [selectedTab, setSelectedTab] = React.useState(0);
   
   const handleRequest = () => {
     if (onRequest) {
@@ -39,269 +51,339 @@ export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({
     }
   };
 
-  const handleViewHistory = (type: 'vacation' | 'sick' | 'wfh') => {
-    if (onViewHistory) {
-      console.log(`History button clicked for ${type}`);
-      onViewHistory(type);
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setSelectedTab(newValue);
+  };
+
+  const renderContent = () => {
+    switch(selectedTab) {
+      case 0: // Annual Leave
+        return (
+          <Box sx={{ display: 'flex', height: '100%' }}>
+            <Box sx={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              alignItems: 'flex-start', 
+              justifyContent: 'center',
+              pl: 3,
+              pr: 4
+            }}>
+              <Box sx={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                bgcolor: '#4CAF50', 
+                p: 2,
+                borderRadius: 2,
+                mb: 2
+              }}>
+                <CalendarIcon sx={{ color: 'white', fontSize: 36 }} />
+              </Box>
+              <Box>
+                <Typography variant="h4" component="div" fontWeight="bold">
+                  {balances.vacation} Days
+                </Typography>
+                <Typography variant="subtitle1" color="text.secondary">
+                  Remaining
+                </Typography>
+              </Box>
+            </Box>
+            
+            <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
+            
+            <Box sx={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              justifyContent: 'center',
+              flexGrow: 1,
+              px: 3
+            }}>
+              <Typography variant="h4" fontWeight="bold" sx={{ mb: 1 }}>
+                {taken.vacation} Days Taken
+              </Typography>
+              <Typography variant="h4" fontWeight="bold" sx={{ display: 'flex', alignItems: 'baseline' }}>
+                {percentages.vacation}
+                <Typography component="span" variant="h6" color="text.secondary" sx={{ ml: 1 }}>
+                  % Balance
+                </Typography>
+              </Typography>
+            </Box>
+            
+            <Box sx={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              p: 2,
+              gap: 2
+            }}>
+              <Button
+                variant="contained"
+                size="large"
+                onClick={handleRequest}
+                sx={{
+                  bgcolor: '#4CAF50',
+                  borderRadius: 2,
+                  px: 4,
+                  py: 1.5,
+                  textTransform: 'none',
+                  fontSize: '1.25rem',
+                  '&:hover': { bgcolor: '#3d8b40' },
+                }}
+              >
+                Request
+              </Button>
+              <Button
+                variant="outlined"
+                size="large"
+                onClick={() => onViewHistory && onViewHistory('vacation')}
+                sx={{
+                  color: '#4CAF50',
+                  borderColor: '#4CAF50',
+                  borderRadius: 2,
+                  px: 4,
+                  py: 1.5,
+                  textTransform: 'none',
+                  fontSize: '1.25rem',
+                  '&:hover': { borderColor: '#3d8b40', color: '#3d8b40' },
+                }}
+              >
+                History
+              </Button>
+            </Box>
+          </Box>
+        );
+      case 1: // Sick Leave
+        return (
+          <Box sx={{ display: 'flex', height: '100%' }}>
+            <Box sx={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              alignItems: 'flex-start', 
+              justifyContent: 'center',
+              pl: 3,
+              pr: 4
+            }}>
+              <Box sx={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                bgcolor: theme.palette.error.main, 
+                p: 2,
+                borderRadius: 2,
+                mb: 2
+              }}>
+                <CalendarIcon sx={{ color: 'white', fontSize: 36 }} />
+              </Box>
+              <Box>
+                <Typography variant="h4" component="div" fontWeight="bold">
+                  {balances.sick} Days
+                </Typography>
+                <Typography variant="subtitle1" color="text.secondary">
+                  Remaining
+                </Typography>
+              </Box>
+            </Box>
+            
+            <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
+            
+            <Box sx={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              justifyContent: 'center',
+              flexGrow: 1,
+              px: 3
+            }}>
+              <Typography variant="h4" fontWeight="bold" sx={{ mb: 1 }}>
+                {taken.sick} Days Taken
+              </Typography>
+              <Typography variant="h4" fontWeight="bold" sx={{ display: 'flex', alignItems: 'baseline' }}>
+                {percentages.sick}
+                <Typography component="span" variant="h6" color="text.secondary" sx={{ ml: 1 }}>
+                  % Balance
+                </Typography>
+              </Typography>
+            </Box>
+            
+            <Box sx={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              p: 2,
+              gap: 2
+            }}>
+              <Button
+                variant="contained"
+                size="large"
+                onClick={handleRequest}
+                sx={{
+                  bgcolor: theme.palette.error.main,
+                  borderRadius: 2,
+                  px: 4,
+                  py: 1.5,
+                  textTransform: 'none',
+                  fontSize: '1.25rem',
+                  '&:hover': { bgcolor: theme.palette.error.dark },
+                }}
+              >
+                Request
+              </Button>
+              <Button
+                variant="outlined"
+                size="large"
+                onClick={() => onViewHistory && onViewHistory('sick')}
+                sx={{
+                  color: theme.palette.error.main,
+                  borderColor: theme.palette.error.main,
+                  borderRadius: 2,
+                  px: 4,
+                  py: 1.5,
+                  textTransform: 'none',
+                  fontSize: '1.25rem',
+                  '&:hover': { borderColor: theme.palette.error.dark, color: theme.palette.error.dark },
+                }}
+              >
+                History
+              </Button>
+            </Box>
+          </Box>
+        );
+      case 2: // Work From Home
+        return (
+          <Box sx={{ display: 'flex', height: '100%' }}>
+            <Box sx={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              alignItems: 'flex-start', 
+              justifyContent: 'center',
+              pl: 3,
+              pr: 4
+            }}>
+              <Box sx={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                bgcolor: theme.palette.primary.main, 
+                p: 2,
+                borderRadius: 2,
+                mb: 2
+              }}>
+                <CalendarIcon sx={{ color: 'white', fontSize: 36 }} />
+              </Box>
+              <Box>
+                <Typography variant="h4" component="div" fontWeight="bold">
+                  {balances.workFromHome} Days
+                </Typography>
+                <Typography variant="subtitle1" color="text.secondary">
+                  Remaining
+                </Typography>
+              </Box>
+            </Box>
+            
+            <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
+            
+            <Box sx={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              justifyContent: 'center',
+              flexGrow: 1,
+              px: 3
+            }}>
+              <Typography variant="h4" fontWeight="bold" sx={{ mb: 1 }}>
+                {taken.workFromHome} Days Taken
+              </Typography>
+              <Typography variant="h4" fontWeight="bold" sx={{ display: 'flex', alignItems: 'baseline' }}>
+                {percentages.workFromHome}
+                <Typography component="span" variant="h6" color="text.secondary" sx={{ ml: 1 }}>
+                  % Balance
+                </Typography>
+              </Typography>
+            </Box>
+            
+            <Box sx={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              p: 2,
+              gap: 2
+            }}>
+              <Button
+                variant="contained"
+                size="large"
+                onClick={handleRequest}
+                sx={{
+                  bgcolor: theme.palette.primary.main,
+                  borderRadius: 2,
+                  px: 4,
+                  py: 1.5,
+                  textTransform: 'none',
+                  fontSize: '1.25rem',
+                  '&:hover': { bgcolor: theme.palette.primary.dark },
+                }}
+              >
+                Request
+              </Button>
+              <Button
+                variant="outlined"
+                size="large"
+                onClick={() => onViewHistory && onViewHistory('wfh')}
+                sx={{
+                  color: theme.palette.primary.main,
+                  borderColor: theme.palette.primary.main,
+                  borderRadius: 2,
+                  px: 4,
+                  py: 1.5,
+                  textTransform: 'none',
+                  fontSize: '1.25rem',
+                  '&:hover': { borderColor: theme.palette.primary.dark, color: theme.palette.primary.dark },
+                }}
+              >
+                History
+              </Button>
+            </Box>
+          </Box>
+        );
+      default:
+        return null;
     }
   };
 
   return (
-    <Grid container spacing={3} sx={{ mb: 4 }}>
-      {/* Vacation Card */}
-      <Grid item xs={12} md={4}>
+    <Grid container>
+      <Grid item xs={12}>
         <Paper
           elevation={0}
           sx={{
-            p: 3,
             borderRadius: 2,
             boxShadow: '0 2px 10px rgba(0,0,0,0.08)',
-            position: 'relative',
             overflow: 'hidden',
-            '&::after': {
-              content: '""',
-              position: 'absolute',
-              top: 0,
-              right: 0,
-              width: '40%',
-              height: '100%',
-              background: `linear-gradient(135deg, transparent 50%, ${theme.palette.success.light}20 50%)`,
-              zIndex: 0,
-            },
           }}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-            <Box
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Tabs 
+              value={selectedTab} 
+              onChange={handleTabChange}
+              aria-label="time off categories"
               sx={{
-                display: 'flex',
-                p: 1,
-                mr: 1.5,
-                color: theme.palette.success.main,
-                backgroundColor: `${theme.palette.success.light}20`,
-                borderRadius: '50%',
+                '& .MuiTab-root': {
+                  textTransform: 'none',
+                  fontSize: '1.25rem',
+                  fontWeight: 500,
+                  px: 4,
+                  py: 2,
+                },
+                '& .Mui-selected': {
+                  color: '#1976d2',
+                  fontWeight: 700,
+                },
+                '& .MuiTabs-indicator': {
+                  height: 3,
+                },
               }}
             >
-              <VacationIcon />
-            </Box>
-            <Typography variant="subtitle1" fontWeight="medium">
-              Annual Leave
-            </Typography>
+              <Tab label="Annual" />
+              <Tab label="Sick" />
+              <Tab label="WFH" />
+            </Tabs>
           </Box>
-
-          <Typography
-            variant="h3"
-            color="success.main"
-            fontWeight="bold"
-            mb={0.5}
-            sx={{ display: 'flex', alignItems: 'flex-end' }}
-          >
-            {balances.vacation}
-            <Typography component="span" variant="body2" color="text.secondary" ml={1} mb={1}>
-              Days
-            </Typography>
-          </Typography>
-
-          <Typography variant="body2" color="text.secondary" mb={3}>
-            Available vacation days
-          </Typography>
-
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', position: 'relative', zIndex: 1 }}>
-            <Button
-              variant="contained"
-              size="small"
-              startIcon={<CalendarIcon />}
-              onClick={handleRequest}
-              sx={{
-                bgcolor: theme.palette.success.main,
-                '&:hover': { bgcolor: theme.palette.success.dark },
-              }}
-            >
-              Request
-            </Button>
-            <Button
-              variant="outlined"
-              size="small"
-              onClick={() => handleViewHistory('vacation')}
-              sx={{
-                color: theme.palette.success.main,
-                borderColor: theme.palette.success.main,
-                '&:hover': { borderColor: theme.palette.success.dark },
-              }}
-            >
-              History
-            </Button>
-          </Box>
-        </Paper>
-      </Grid>
-
-      {/* Sick Leave Card */}
-      <Grid item xs={12} md={4}>
-        <Paper
-          elevation={0}
-          sx={{
-            p: 3,
-            borderRadius: 2,
-            boxShadow: '0 2px 10px rgba(0,0,0,0.08)',
-            position: 'relative',
-            overflow: 'hidden',
-            '&::after': {
-              content: '""',
-              position: 'absolute',
-              top: 0,
-              right: 0,
-              width: '40%',
-              height: '100%',
-              background: `linear-gradient(135deg, transparent 50%, ${theme.palette.error.light}20 50%)`,
-              zIndex: 0,
-            },
-          }}
-        >
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-            <Box
-              sx={{
-                display: 'flex',
-                p: 1,
-                mr: 1.5,
-                color: theme.palette.error.main,
-                backgroundColor: `${theme.palette.error.light}20`,
-                borderRadius: '50%',
-              }}
-            >
-              <SickIcon />
-            </Box>
-            <Typography variant="subtitle1" fontWeight="medium">
-              Sick Leave
-            </Typography>
-          </Box>
-
-          <Typography
-            variant="h3"
-            color="error.main"
-            fontWeight="bold"
-            mb={0.5}
-            sx={{ display: 'flex', alignItems: 'flex-end' }}
-          >
-            {balances.sick}
-            <Typography component="span" variant="body2" color="text.secondary" ml={1} mb={1}>
-              Days
-            </Typography>
-          </Typography>
-
-          <Typography variant="body2" color="text.secondary" mb={3}>
-            Available sick leave days
-          </Typography>
-
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', position: 'relative', zIndex: 1 }}>
-            <Button
-              variant="contained"
-              size="small"
-              startIcon={<CalendarIcon />}
-              onClick={handleRequest}
-              sx={{
-                bgcolor: theme.palette.error.main,
-                '&:hover': { bgcolor: theme.palette.error.dark },
-              }}
-            >
-              Request
-            </Button>
-            <Button
-              variant="outlined"
-              size="small"
-              onClick={() => handleViewHistory('sick')}
-              sx={{
-                color: theme.palette.error.main,
-                borderColor: theme.palette.error.main,
-                '&:hover': { borderColor: theme.palette.error.dark },
-              }}
-            >
-              History
-            </Button>
-          </Box>
-        </Paper>
-      </Grid>
-
-      {/* Work From Home Card */}
-      <Grid item xs={12} md={4}>
-        <Paper
-          elevation={0}
-          sx={{
-            p: 3,
-            borderRadius: 2,
-            boxShadow: '0 2px 10px rgba(0,0,0,0.08)',
-            position: 'relative',
-            overflow: 'hidden',
-            '&::after': {
-              content: '""',
-              position: 'absolute',
-              top: 0,
-              right: 0,
-              width: '40%',
-              height: '100%',
-              background: `linear-gradient(135deg, transparent 50%, ${theme.palette.primary.light}20 50%)`,
-              zIndex: 0,
-            },
-          }}
-        >
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-            <Box
-              sx={{
-                display: 'flex',
-                p: 1,
-                mr: 1.5,
-                color: theme.palette.primary.main,
-                backgroundColor: `${theme.palette.primary.light}20`,
-                borderRadius: '50%',
-              }}
-            >
-              <HomeIcon />
-            </Box>
-            <Typography variant="subtitle1" fontWeight="medium">
-              Work From Home
-            </Typography>
-          </Box>
-
-          <Typography
-            variant="h3"
-            color="primary.main"
-            fontWeight="bold"
-            mb={0.5}
-            sx={{ display: 'flex', alignItems: 'flex-end' }}
-          >
-            {balances.workFromHome}
-            <Typography component="span" variant="body2" color="text.secondary" ml={1} mb={1}>
-              Days
-            </Typography>
-          </Typography>
-
-          <Typography variant="body2" color="text.secondary" mb={3}>
-            Available work from home days
-          </Typography>
-
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', position: 'relative', zIndex: 1 }}>
-            <Button
-              variant="contained"
-              size="small"
-              startIcon={<CalendarIcon />}
-              onClick={handleRequest}
-              sx={{
-                bgcolor: theme.palette.primary.main,
-                '&:hover': { bgcolor: theme.palette.primary.dark },
-              }}
-            >
-              Request
-            </Button>
-            <Button
-              variant="outlined"
-              size="small"
-              onClick={() => handleViewHistory('wfh')}
-              sx={{
-                color: theme.palette.primary.main,
-                borderColor: theme.palette.primary.main,
-                '&:hover': { borderColor: theme.palette.primary.dark },
-              }}
-            >
-              History
-            </Button>
+          <Box sx={{ p: 0, height: '180px' }}>
+            {renderContent()}
           </Box>
         </Paper>
       </Grid>
