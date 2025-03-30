@@ -1,3 +1,4 @@
+// PersonalInfoPanel.tsx
 import React, { useState } from "react";
 import {
   Box,
@@ -5,141 +6,36 @@ import {
   Tabs,
   Typography,
   Paper,
-  Grid,
-  TextField,
-  Divider,
-  Button,
-  IconButton,
   Stack,
-  FormHelperText,
-  MenuItem,
-  Select,
-  FormControl,
-  InputLabel,
+  Button,
 } from "@mui/material";
-import UploadFileIcon from '@mui/icons-material/UploadFile';
 
-// Validation functions
-const validateNationalId = (id: string): string | null => {
-  // Tanzanian National ID validation (20 digits)
-  if (!id) return "National ID is required";
-  if (!/^\d{20}$/.test(id)) return "National ID must be 20 digits";
-  return null;
-};
+// Import components
+import BasicInfoForm from './basic-info-form';
+import AddressForm from './address-form';
+import EmergencyContactForm from './emergency-contact-form';
+import EducationForm from './education-form';
+import SocialMediaForm, { SocialMediaAccount } from './social-media-form';
+import DocumentsForm from './documents-form';
 
-const validateNSSF = (nssf: string): string | null => {
-  // NSSF validation (typically 13 digits starting with NS or NSSF)
-  if (!nssf) return "NSSF is required";
-  if (!/^(NS|NSSF)?\d{13}$/.test(nssf)) return "NSSF must be 13 digits, may start with NS or NSSF";
-  return null;
-};
-
-const validateTIN = (tin: string): string | null => {
-  // TIN validation (9 digits for Tanzania)
-  if (!tin) return "TIN is required";
-  if (!/^\d{9}$/.test(tin)) return "TIN must be 9 digits";
-  return null;
-};
-
-const validateDriverLicense = (license: string): string | null => {
-  // Tanzania driver license (typically starts with T followed by 11 digits)
-  if (!license) return "Driver license is required";
-  if (!/^T\d{11}$/.test(license)) return "Driver license must start with T followed by 11 digits";
-  return null;
-};
-
-const validatePhone = (phone: string): string | null => {
-  // Tanzania phone number validation
-  if (!phone) return "Phone number is required";
-  if (!/^\+255-[67]\d{2}-\d{3}-\d{3}$/.test(phone)) 
-    return "Phone number must be in format +255-7XX-XXX-XXX or +255-6XX-XXX-XXX";
-  return null;
-};
-
-const validateEmail = (email: string): string | null => {
-  if (!email) return "Email is required";
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return "Invalid email format";
-  return null;
-};
-
-// Tanzanian regions
-const tanzaniaRegions = [
-  "Arusha", "Dar es Salaam", "Dodoma", "Geita", "Iringa", "Kagera", "Katavi",
-  "Kigoma", "Kilimanjaro", "Lindi", "Manyara", "Mara", "Mbeya", "Morogoro",
-  "Mtwara", "Mwanza", "Njombe", "Pemba North", "Pemba South", "Pwani",
-  "Rukwa", "Ruvuma", "Shinyanga", "Simiyu", "Singida", "Songwe", "Tabora",
-  "Tanga", "Zanzibar Central/South", "Zanzibar North", "Zanzibar Urban/West"
-];
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-  return (
-    <div role="tabpanel" hidden={value !== index} {...other}>
-      {value === index && <Box sx={{ p: 2 }}>{children}</Box>}
-    </div>
-  );
-}
-
-interface ErrorState {
-  nationalId: string | null;
-  nssf: string | null;
-  tin: string | null;
-  driverLicense: string | null;
-  phone: string | null;
-  email: string | null;
-  [key: string]: string | null;
-}
-
-// Define File interface for documents
-interface FormDataType {
-  fullName: string;
-  email: string;
-  phone: string;
-  dob: string;
-  nationality: string;
-  maritalStatus: string;
-  nationalId: string;
-  nssf: string;
-  tin: string;
-  driverLicense: string;
-  address: {
-    street: string;
-    city: string;
-    region: string;
-    postalCode: string;
-    ward: string;
-  };
-  emergency: {
-    name: string;
-    relationship: string;
-    phone: string;
-    email: string;
-  };
-  social: {
-    linkedin: string;
-    twitter: string;
-    facebook: string;
-    github: string;
-  };
-  education: {
-    institution: string;
-    degree: string;
-    field: string;
-    year: number;
-  };
-  documents: File[];
-}
+// Import types
+import { 
+  TabPanel, 
+  FormDataType, 
+  ErrorState, 
+  validatePhone,
+  validateEmail,
+  validateNationalId,
+  validateNSSF,
+  validateTIN,
+  validateDriverLicense
+} from './types';
 
 export const PersonalInfoPanel: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
 
+  // Initialize form data with socialMediaAccounts instead of socialMedia
   const [formData, setFormData] = useState<FormDataType>({
     fullName: "Emmanuel Muro",
     email: "emuro@sanku.com",
@@ -154,39 +50,52 @@ export const PersonalInfoPanel: React.FC = () => {
     tin: "123456789",
     driverLicense: "T12345678901",
     
-    // Address information
-    address: {
-      street: "123 Uhuru Street",
-      city: "Dar es Salaam",
-      region: "Dar es Salaam",
-      postalCode: "12345",
-      ward: "Kinondoni",
-    },
+    // Addresses array
+    addresses: [
+      {
+        street: "123 Uhuru Street",
+        city: "Dar es Salaam",
+        region: "Dar es Salaam",
+        postalCode: "12345",
+        ward: "Kinondoni",
+        isPrimary: true,
+      }
+    ],
 
-    emergency: {
-      name: "John Doe",
-      relationship: "Brother",
-      phone: "+255-700-123-456",
-      email: "john@example.com",
-    },
+    // Emergency contacts array
+    emergencyContacts: [
+      {
+        name: "John Doe",
+        relationship: "Brother",
+        phone: "+255-700-123-456",
+        email: "john@example.com",
+      }
+    ],
 
-    social: {
-      linkedin: "linkedin.com/in/emmanuel",
-      twitter: "@emmanuel",
-      facebook: "facebook.com/emmanuel",
-      github: "github.com/emmanuelmuro",
-    },
+    // Social media accounts - converted from object to array format
+    socialMediaAccounts: [
+      { platform: "linkedin", url: "linkedin.com/in/emmanuel" },
+      { platform: "twitter", url: "@emmanuel" },
+      { platform: "facebook", url: "facebook.com/emmanuel" },
+      { platform: "github", url: "github.com/emmanuelmuro" }
+    ],
 
-    education: {
-      institution: "University of Dar es Salaam",
-      degree: "BSc Computer Science",
-      field: "Software Engineering",
-      year: 2015,
-    },
+    // Education array
+    educations: [
+      {
+        institution: "University of Dar es Salaam",
+        degree: "BSc Computer Science",
+        field: "Software Engineering",
+        year: 2015,
+        isPrimary: true
+      }
+    ],
 
+    // Documents array
     documents: [],
   });
 
+  // Error state for validation
   const [errors, setErrors] = useState<ErrorState>({
     nationalId: null,
     nssf: null,
@@ -196,27 +105,157 @@ export const PersonalInfoPanel: React.FC = () => {
     email: null,
   });
 
-  // Validate form before saving
-  const validateForm = () => {
-    const newErrors: ErrorState = {
-      nationalId: validateNationalId(formData.nationalId),
-      nssf: validateNSSF(formData.nssf),
-      tin: validateTIN(formData.tin),
-      driverLicense: validateDriverLicense(formData.driverLicense),
-      phone: validatePhone(formData.phone),
-      email: validateEmail(formData.email),
-    };
-
-    setErrors(newErrors);
-    
-    // Check if there are any errors
-    return !Object.values(newErrors).some(error => error !== null);
+  // Action handlers for addresses
+  const addAddress = () => {
+    setFormData(prev => ({
+      ...prev,
+      addresses: [...prev.addresses, {
+        street: "",
+        city: "",
+        region: "",
+        postalCode: "",
+        ward: "",
+        isPrimary: false
+      }]
+    }));
   };
 
+  const removeAddress = (index: number) => {
+    if (formData.addresses.length <= 1) return;
+    
+    const isPrimaryRemoved = formData.addresses[index].isPrimary;
+    const updatedAddresses = formData.addresses.filter((_, i) => i !== index);
+    
+    if (isPrimaryRemoved && updatedAddresses.length > 0) {
+      updatedAddresses[0].isPrimary = true;
+    }
+    
+    setFormData(prev => ({
+      ...prev,
+      addresses: updatedAddresses
+    }));
+  };
+
+  const setPrimaryAddress = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      addresses: prev.addresses.map((addr, i) => ({
+        ...addr,
+        isPrimary: i === index
+      }))
+    }));
+  };
+
+  // Action handlers for emergency contacts
+  const addEmergencyContact = () => {
+    setFormData(prev => ({
+      ...prev,
+      emergencyContacts: [...prev.emergencyContacts, {
+        name: "",
+        relationship: "",
+        phone: "",
+        email: ""
+      }]
+    }));
+  };
+
+  const removeEmergencyContact = (index: number) => {
+    if (formData.emergencyContacts.length <= 1) return;
+    
+    setFormData(prev => ({
+      ...prev,
+      emergencyContacts: prev.emergencyContacts.filter((_, i) => i !== index)
+    }));
+  };
+
+  // Action handlers for social media accounts
+  const addSocialMediaAccount = (account: SocialMediaAccount) => {
+    setFormData(prev => ({
+      ...prev,
+      socialMediaAccounts: [...prev.socialMediaAccounts, account]
+    }));
+  };
+
+  const removeSocialMediaAccount = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      socialMediaAccounts: prev.socialMediaAccounts.filter((_, i) => i !== index)
+    }));
+  };
+
+  const updateSocialMediaAccount = (index: number, field: 'platform' | 'url', value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      socialMediaAccounts: prev.socialMediaAccounts.map((account, i) => 
+        i === index ? { ...account, [field]: value } : account
+      )
+    }));
+  };
+
+  // Action handlers for education
+  const addEducation = () => {
+    setFormData(prev => ({
+      ...prev,
+      educations: [...prev.educations, {
+        institution: "",
+        degree: "",
+        field: "",
+        year: new Date().getFullYear(),
+        isPrimary: false
+      }]
+    }));
+  };
+
+  const removeEducation = (index: number) => {
+    if (formData.educations.length <= 1) return;
+    
+    const isPrimaryRemoved = formData.educations[index].isPrimary;
+    const updatedEducations = formData.educations.filter((_, i) => i !== index);
+    
+    if (isPrimaryRemoved && updatedEducations.length > 0) {
+      updatedEducations[0].isPrimary = true;
+    }
+    
+    setFormData(prev => ({
+      ...prev,
+      educations: updatedEducations
+    }));
+  };
+
+  const setPrimaryEducation = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      educations: prev.educations.map((edu, i) => ({
+        ...edu,
+        isPrimary: i === index
+      }))
+    }));
+  };
+
+  // Document handlers
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      setFormData((prev) => ({
+        ...prev,
+        documents: [...prev.documents, ...Array.from(files)],
+      }));
+    }
+  };
+
+  const removeDocument = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      documents: prev.documents.filter((_, i) => i !== index)
+    }));
+  };
+
+  // General change handler for form fields
   const handleChange = (
     section: string,
     key: string,
-    value: string | number
+    value: string | number,
+    index?: number
   ) => {
     if (section === "main") {
       setFormData((prev) => ({ ...prev, [key]: value }));
@@ -252,33 +291,51 @@ export const PersonalInfoPanel: React.FC = () => {
           [key]: validationError
         }));
       }
-    } else if (section === "address") {
+    } else if (section === "addresses" && index !== undefined) {
       setFormData((prev) => ({
         ...prev,
-        address: {
-          ...prev.address,
-          [key]: value,
-        },
+        addresses: prev.addresses.map((addr, i) => 
+          i === index ? { ...addr, [key]: value } : addr
+        )
       }));
+    } else if (section === "emergencyContacts" && index !== undefined) {
+      setFormData((prev) => ({
+        ...prev,
+        emergencyContacts: prev.emergencyContacts.map((contact, i) => 
+          i === index ? { ...contact, [key]: value } : contact
+        )
+      }));
+    } else if (section === "educations" && index !== undefined) {
+      setFormData((prev) => ({
+        ...prev,
+        educations: prev.educations.map((edu, i) => 
+          i === index ? { ...edu, [key]: value } : edu
+        )
+      }));
+    } else if (section === "socialMedia") {
+      // For backward compatibility - can log a warning and ignore
+      console.warn('The socialMedia object is deprecated. Use socialMediaAccounts array instead.');
     } else {
-      setFormData((prev) => ({
-        ...prev,
-        [section]: {
-          ...(prev[section as keyof FormDataType] as Record<string, unknown>),
-          [key]: value,
-        },
-      }));
+      // This else block should never be reached with proper usage
+      console.warn(`Unhandled section: ${section}`);
     }
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files && files.length > 0) {
-      setFormData((prev) => ({
-        ...prev,
-        documents: [...prev.documents, ...Array.from(files)],
-      }));
-    }
+  // Validate form before saving
+  const validateForm = () => {
+    const newErrors: ErrorState = {
+      nationalId: validateNationalId(formData.nationalId),
+      nssf: validateNSSF(formData.nssf),
+      tin: validateTIN(formData.tin),
+      driverLicense: validateDriverLicense(formData.driverLicense),
+      phone: validatePhone(formData.phone),
+      email: validateEmail(formData.email),
+    };
+
+    setErrors(newErrors);
+    
+    // Check if there are any errors
+    return !Object.values(newErrors).some(error => error !== null);
   };
 
   const toggleEdit = () => {
@@ -296,6 +353,10 @@ export const PersonalInfoPanel: React.FC = () => {
     }
   };
 
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setActiveTab(newValue);
+  };
+
   return (
     <Paper elevation={3} sx={{ p: 2, borderRadius: 2 }}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
@@ -309,340 +370,97 @@ export const PersonalInfoPanel: React.FC = () => {
 
       <Tabs
         value={activeTab}
-        onChange={(e, v) => setActiveTab(v)}
+        onChange={handleTabChange}
         variant="scrollable"
         scrollButtons="auto"
         allowScrollButtonsMobile
       >
         <Tab label="Basic Info" />
-        <Tab label="Identification" />
         <Tab label="Address" />
         <Tab label="Emergency Contact" />
-        <Tab label="Social Links" />
         <Tab label="Education" />
+        <Tab label="Social Media" />
         <Tab label="Documents" />
       </Tabs>
 
-      {/* BASIC INFO */}
-      <TabPanel value={activeTab} index={0}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Full Name"
-              value={formData.fullName}
-              onChange={(e) => handleChange("main", "fullName", e.target.value)}
-              fullWidth
-              disabled={!isEditing}
-              required
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Email"
-              value={formData.email}
-              onChange={(e) => handleChange("main", "email", e.target.value)}
-              fullWidth
-              disabled={!isEditing}
-              required
-              error={!!errors.email}
-              helperText={errors.email || ''}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Phone Number"
-              value={formData.phone}
-              onChange={(e) => handleChange("main", "phone", e.target.value)}
-              fullWidth
-              disabled={!isEditing}
-              required
-              error={!!errors.phone}
-              helperText={errors.phone || 'Format: +255-7XX-XXX-XXX'}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Date of Birth"
-              type="date"
-              value={formData.dob}
-              onChange={(e) => handleChange("main", "dob", e.target.value)}
-              InputLabelProps={{ shrink: true }}
-              fullWidth
-              disabled={!isEditing}
-              required
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Nationality"
-              value={formData.nationality}
-              onChange={(e) => handleChange("main", "nationality", e.target.value)}
-              fullWidth
-              disabled={!isEditing}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Marital Status"
-              value={formData.maritalStatus}
-              onChange={(e) => handleChange("main", "maritalStatus", e.target.value)}
-              fullWidth
-              disabled={!isEditing}
-              select
-            >
-              <MenuItem value="Single">Single</MenuItem>
-              <MenuItem value="Married">Married</MenuItem>
-              <MenuItem value="Divorced">Divorced</MenuItem>
-              <MenuItem value="Widowed">Widowed</MenuItem>
-            </TextField>
-          </Grid>
-        </Grid>
-      </TabPanel>
+      <Box sx={{ p: 2 }}>
+        {/* BASIC INFO */}
+        <TabPanel value={activeTab} index={0}>
+          <BasicInfoForm 
+            fullName={formData.fullName}
+            email={formData.email}
+            phone={formData.phone}
+            dob={formData.dob}
+            nationality={formData.nationality}
+            maritalStatus={formData.maritalStatus}
+            nationalId={formData.nationalId}
+            nssf={formData.nssf}
+            tin={formData.tin}
+            driverLicense={formData.driverLicense}
+            errors={errors}
+            isEditing={isEditing}
+            onChange={handleChange}
+          />
+        </TabPanel>
 
-      {/* IDENTIFICATION - New Tab */}
-      <TabPanel value={activeTab} index={1}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="National ID Number"
-              value={formData.nationalId}
-              onChange={(e) => handleChange("main", "nationalId", e.target.value)}
-              fullWidth
-              disabled={!isEditing}
-              required
-              error={!!errors.nationalId}
-              helperText={errors.nationalId || '20 digits required'}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="NSSF Number"
-              value={formData.nssf}
-              onChange={(e) => handleChange("main", "nssf", e.target.value)}
-              fullWidth
-              disabled={!isEditing}
-              required
-              error={!!errors.nssf}
-              helperText={errors.nssf || 'Format: NSSF13digits or NS13digits or 13digits'}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="TIN (Tax Identification Number)"
-              value={formData.tin}
-              onChange={(e) => handleChange("main", "tin", e.target.value)}
-              fullWidth
-              disabled={!isEditing}
-              required
-              error={!!errors.tin}
-              helperText={errors.tin || '9 digits required'}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Driver's License Number"
-              value={formData.driverLicense}
-              onChange={(e) => handleChange("main", "driverLicense", e.target.value)}
-              fullWidth
-              disabled={!isEditing}
-              error={!!errors.driverLicense}
-              helperText={errors.driverLicense || 'Format: T11digits'}
-            />
-          </Grid>
-        </Grid>
-      </TabPanel>
+        {/* ADDRESS */}
+        <TabPanel value={activeTab} index={1}>
+          <AddressForm 
+            addresses={formData.addresses}
+            isEditing={isEditing}
+            onAddAddress={addAddress}
+            onRemoveAddress={removeAddress}
+            onSetPrimaryAddress={setPrimaryAddress}
+            onChange={handleChange}
+          />
+        </TabPanel>
 
-      {/* ADDRESS - New Tab */}
-      <TabPanel value={activeTab} index={2}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <TextField
-              label="Street Address"
-              value={formData.address.street}
-              onChange={(e) => handleChange("address", "street", e.target.value)}
-              fullWidth
-              disabled={!isEditing}
-              required
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="City/Town"
-              value={formData.address.city}
-              onChange={(e) => handleChange("address", "city", e.target.value)}
-              fullWidth
-              disabled={!isEditing}
-              required
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth disabled={!isEditing} required>
-              <InputLabel>Region</InputLabel>
-              <Select
-                value={formData.address.region}
-                label="Region"
-                onChange={(e) => handleChange("address", "region", e.target.value)}
-              >
-                {tanzaniaRegions.map(region => (
-                  <MenuItem key={region} value={region}>{region}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Postal Code"
-              value={formData.address.postalCode}
-              onChange={(e) => handleChange("address", "postalCode", e.target.value)}
-              fullWidth
-              disabled={!isEditing}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Ward"
-              value={formData.address.ward}
-              onChange={(e) => handleChange("address", "ward", e.target.value)}
-              fullWidth
-              disabled={!isEditing}
-            />
-          </Grid>
-        </Grid>
-      </TabPanel>
+        {/* EMERGENCY CONTACT */}
+        <TabPanel value={activeTab} index={2}>
+          <EmergencyContactForm 
+            contacts={formData.emergencyContacts}
+            isEditing={isEditing}
+            onAddContact={addEmergencyContact}
+            onRemoveContact={removeEmergencyContact}
+            onChange={handleChange}
+          />
+        </TabPanel>
 
-      {/* EMERGENCY CONTACT */}
-      <TabPanel value={activeTab} index={3}>
-        <Typography variant="subtitle1" gutterBottom>Primary Contact</Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Name"
-              value={formData.emergency.name}
-              onChange={(e) => handleChange("emergency", "name", e.target.value)}
-              fullWidth
-              disabled={!isEditing}
-              required
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Relationship"
-              value={formData.emergency.relationship}
-              onChange={(e) => handleChange("emergency", "relationship", e.target.value)}
-              fullWidth
-              disabled={!isEditing}
-              required
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Phone Number"
-              value={formData.emergency.phone}
-              onChange={(e) => handleChange("emergency", "phone", e.target.value)}
-              fullWidth
-              disabled={!isEditing}
-              required
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Email"
-              value={formData.emergency.email}
-              onChange={(e) => handleChange("emergency", "email", e.target.value)}
-              fullWidth
-              disabled={!isEditing}
-            />
-          </Grid>
-        </Grid>
-      </TabPanel>
+        {/* EDUCATION */}
+        <TabPanel value={activeTab} index={3}>
+          <EducationForm 
+            educations={formData.educations}
+            isEditing={isEditing}
+            onAddEducation={addEducation}
+            onRemoveEducation={removeEducation}
+            onSetPrimaryEducation={setPrimaryEducation}
+            onChange={handleChange}
+          />
+        </TabPanel>
 
-      {/* SOCIAL LINKS */}
-      <TabPanel value={activeTab} index={4}>
-        <Grid container spacing={2}>
-          {Object.entries(formData.social).map(([key, val]) => (
-            <Grid item xs={12} sm={6} key={key}>
-              <TextField
-                label={key.charAt(0).toUpperCase() + key.slice(1)}
-                value={val}
-                onChange={(e) => handleChange("social", key, e.target.value)}
-                fullWidth
-                disabled={!isEditing}
-              />
-            </Grid>
-          ))}
-        </Grid>
-      </TabPanel>
+        {/* SOCIAL MEDIA - Updated to use the new dynamic component */}
+        <TabPanel value={activeTab} index={4}>
+          <SocialMediaForm 
+            socialMediaAccounts={formData.socialMediaAccounts}
+            isEditing={isEditing}
+            onAddAccount={addSocialMediaAccount}
+            onRemoveAccount={removeSocialMediaAccount}
+            onUpdateAccount={updateSocialMediaAccount}
+          />
+        </TabPanel>
 
-      {/* EDUCATION */}
-      <TabPanel value={activeTab} index={5}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Institution"
-              value={formData.education.institution}
-              onChange={(e) => handleChange("education", "institution", e.target.value)}
-              fullWidth
-              disabled={!isEditing}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Degree"
-              value={formData.education.degree}
-              onChange={(e) => handleChange("education", "degree", e.target.value)}
-              fullWidth
-              disabled={!isEditing}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Field of Study"
-              value={formData.education.field}
-              onChange={(e) => handleChange("education", "field", e.target.value)}
-              fullWidth
-              disabled={!isEditing}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Graduation Year"
-              value={formData.education.year}
-              onChange={(e) => handleChange("education", "year", e.target.value)}
-              fullWidth
-              type="number"
-              disabled={!isEditing}
-            />
-          </Grid>
-        </Grid>
-      </TabPanel>
-
-      {/* DOCUMENTS */}
-      <TabPanel value={activeTab} index={6}>
-        <Typography variant="body2" gutterBottom>
-          Upload your documents (e.g., ID, Passport, Certificates)
-        </Typography>
-        {isEditing && (
-          <Button
-            variant="outlined"
-            component="label"
-            startIcon={<UploadFileIcon />}
-            sx={{ mb: 2 }}
-          >
-            Upload File
-            <input
-              type="file"
-              hidden
-              multiple
-              onChange={handleFileUpload}
-            />
-          </Button>
-        )}
-        <ul>
-          {formData.documents.map((doc: File, i: number) => (
-            <li key={i}>{doc.name}</li>
-          ))}
-        </ul>
-      </TabPanel>
+        {/* DOCUMENTS */}
+        <TabPanel value={activeTab} index={5}>
+          <DocumentsForm 
+            documents={formData.documents}
+            isEditing={isEditing}
+            onDocumentUpload={handleFileUpload}
+            onRemoveDocument={removeDocument}
+          />
+        </TabPanel>
+      </Box>
     </Paper>
   );
 };
+
+export default PersonalInfoPanel;
