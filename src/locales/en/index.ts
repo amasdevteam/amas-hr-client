@@ -38,5 +38,8 @@ export const en = {
 		review: "Quarterly Review",
 	  },
 	},
+	personal: {
+		title_personal: "Personal",
+	  }
   } as const;
   

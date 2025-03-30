@@ -38,5 +38,8 @@ export const sw = {
 		review: "Mapitio ya Robo",
 	  },
 	},
+	personal: {
+		title_personal: "Binafsi",
+	  }
   } as const;
   
