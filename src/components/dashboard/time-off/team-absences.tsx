@@ -227,7 +227,7 @@ export const TeamAbsences: React.FC<TeamAbsencesProps> = ({ onClose }) => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <TeamIcon sx={{ mr: 1.5 }} />
           <Typography variant="h6" fontWeight="medium">
-            Who's Out
+            Out of Office
           </Typography>
         </Box>
         

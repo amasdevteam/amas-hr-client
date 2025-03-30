@@ -247,7 +247,7 @@ export const RequestTimeOffForm: React.FC<RequestTimeOffFormProps> = ({
       <Grid item xs={12} lg={8}>
         <Paper elevation={3} sx={{ borderRadius: 2, overflow: 'hidden', height: '100%' }}>
           <Box sx={{ p: 2, backgroundColor: 'primary.main', color: 'white' }}>
-            <Typography variant="h6">Request Time Off</Typography>
+            <Typography variant="h6">Request Leave</Typography>
           </Box>
           
           <Collapse in={showAlert}>

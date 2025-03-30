@@ -23,7 +23,7 @@ export const en = {
 	},
 	timeOff: {
 	  title_dashboard: "Leave Center",
-	  title_requestForm: "Request Time Off",
+	  title_requestForm: "Request Leave",
 	  title_vacationHistory: "Annual Leave History",
 	  title_sickHistory: "Sick Leave History",
 	  title_wfhHistory: "Work From Home History",

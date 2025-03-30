@@ -87,7 +87,7 @@ const TimeOffDashboard: React.FC = () => {
                 }}
               >
                 <Typography variant="h6" fontWeight="medium">
-                  Upcoming Time Off
+                  Heads-Up: Time Off
                 </Typography>
                 <Button 
                   variant="contained" 

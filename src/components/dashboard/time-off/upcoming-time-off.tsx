@@ -99,7 +99,7 @@ export const UpcomingTimeOff: React.FC<UpcomingTimeOffProps> = ({
       <Box sx={{ p: 2, backgroundColor: '#f5f5f5', display: 'flex', alignItems: 'center' }}>
         <EventAvailable sx={{ mr: 1.5, color: theme.palette.primary.main }} />
         <Typography variant="h6" fontWeight="medium">
-          Upcoming Time Off
+          Heads-Up: Time Off
         </Typography>
       </Box>
       <List sx={{ p: 0 }}>

@@ -176,7 +176,7 @@ export const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
               <AddIcon fontSize="small" sx={{ color: theme.palette.success.main }} />
             </ListItemIcon>
             <ListItemText 
-              primary="Request Time Off" 
+              primary="Request Leave" 
               primaryTypographyProps={{ variant: 'body2', fontWeight: 'medium' }}
             />
           </ListItem>
@@ -200,7 +200,7 @@ export const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
               <TeamIcon fontSize="small" sx={{ color: theme.palette.primary.main }} />
             </ListItemIcon>
             <ListItemText 
-              primary="Who's Out" 
+              primary="Out of Office" 
               primaryTypographyProps={{ variant: 'body2', fontWeight: 'medium' }}
             />
           </ListItem>
