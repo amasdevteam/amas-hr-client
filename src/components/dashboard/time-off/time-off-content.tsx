@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Box, Paper, Tabs, Tab } from '@mui/material';
 import { Event as EventIcon } from '@mui/icons-material';
-import { TimeOffBalancesRow } from './time-off-balances-row';
+// import { TimeOffBalancesRow } from './time-off-balances-row';
 import { UpcomingTimeOff } from './upcoming-time-off';
 import { TimeOffCalendar } from './time-off-calender';
 
@@ -90,11 +90,11 @@ const TimeOffContent: React.FC<TimeOffContentProps> = ({
 
   return (
     <>
-      <TimeOffBalancesRow 
+      {/* <TimeOffBalancesRow 
         balances={sampleBalances}
         onViewHistory={onViewHistory}
         onRequest={onRequest}
-      />
+      /> */}
 
       <Paper sx={{ mb: 4, borderRadius: 2, boxShadow: '0 2px 10px rgba(0,0,0,0.08)' }}>
         <Tabs

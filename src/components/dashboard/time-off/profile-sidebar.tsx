@@ -181,7 +181,7 @@ export const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
             />
           </ListItem>
 
-          {/* Who's Out - Keep using onClick for dialog */}
+          {/* Out of Office - Keep using onClick for dialog */}
           <ListItem 
             button
             disableRipple
