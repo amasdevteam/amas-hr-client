@@ -5,7 +5,8 @@ import {
   TextField,
   MenuItem,
 } from '@mui/material';
-import { ErrorState, validateEmail, validatePhone } from './types';
+import { ErrorState } from './types';
+
 
 interface BasicInfoFormProps {
   fullName: string;
