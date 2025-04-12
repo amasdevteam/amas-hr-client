@@ -5,6 +5,8 @@ import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import { routes } from "@/routes";
 import { Root } from "@/root";
 import { ScrollRestoration } from "@/components/core/scroll-restoration";
+import 'react-phone-number-input/style.css';
+
 
 const root = createRoot(document.querySelector("#root")!);
 

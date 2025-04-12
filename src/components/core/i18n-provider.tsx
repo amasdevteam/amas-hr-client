@@ -9,6 +9,7 @@ import { logger } from "@/lib/default-logger";
 import { de } from "@/locales/de";
 import { en } from "@/locales/en";
 import { es } from "@/locales/es";
+import { sw } from "@/locales/sw";
 
 import { useSettings } from "./settings/settings-context";
 
@@ -24,6 +25,7 @@ use(initReactI18next)
 			de,
 			en,
 			es,
+			sw,
 		},
 	})
 	// eslint-disable-next-line unicorn/prefer-top-level-await

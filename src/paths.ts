@@ -42,6 +42,10 @@ export const paths = {
 	},
 	dashboard: {
 		overview: "/dashboard",
+		profile: "/dashboard/profile",
+		employees: "/dashboard/employees", // Added employees path
+		documents: "/dashboard/documents", // Added the missing property
+		reports: "/dashboard/reports", // Added reports path
 		settings: {
 			account: "/dashboard/settings/account",
 			billing: "/dashboard/settings/billing",
@@ -131,6 +135,6 @@ export const paths = {
 	notAuthorized: "/errors/not-authorized",
 	notFound: "/errors/not-found",
 	internalServerError: "/errors/internal-server-error",
-	docs: "https://material-kit-pro-react-docs.devias.io",
-	purchase: "https://mui.com/store/items/devias-kit-pro",
+	// docs: "https://material-kit-pro-react-docs.devias.io",
+	// purchase: "https://mui.com/store/items/devias-kit-pro",
 } as const;

@@ -10,6 +10,7 @@ import {
 	nevada,
 	redOrange,
 	royalBlue,
+	skyBlue,
 	shakespeare,
 	stormGrey,
 	tomatoOrange,
@@ -17,6 +18,29 @@ import {
 import type { ColorScheme, PrimaryColor } from "./types";
 
 const primarySchemes: Record<PrimaryColor, Record<ColorScheme, PaletteColorOptions>> = {
+	// Add this to the primarySchemes record in color-schemes.ts
+	skyBlue: {
+		dark: {
+		...skyBlue,
+		light: skyBlue[300],
+		main: skyBlue[400],
+		dark: skyBlue[800],
+		contrastText: "var(--mui-palette-common-white)",
+		activated: "rgba(var(--mui-palette-primary-mainChannel) / var(--mui-palette-action-activatedOpacity))",
+		hovered: "rgba(var(--mui-palette-primary-mainChannel) / var(--mui-palette-action-hoverOpacity))",
+		selected: "rgba(var(--mui-palette-primary-mainChannel) / var(--mui-palette-action-selectedOpacity))",
+		},
+		light: {
+		...skyBlue,
+		light: skyBlue[300],
+		main: skyBlue[400],
+		dark: skyBlue[800],
+		contrastText: "var(--mui-palette-common-white)",
+		activated: "rgba(var(--mui-palette-primary-mainChannel) / var(--mui-palette-action-activatedOpacity))",
+		hovered: "rgba(var(--mui-palette-primary-mainChannel) / var(--mui-palette-action-hoverOpacity))",
+		selected: "rgba(var(--mui-palette-primary-mainChannel) / var(--mui-palette-action-selectedOpacity))",
+		},
+	},
 	chateauGreen: {
 		dark: {
 			...chateauGreen,
