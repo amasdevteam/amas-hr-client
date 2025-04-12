@@ -30,6 +30,8 @@ interface UserProfile {
   manager: string;
 }
 
+
+
 interface ProfileSidebarProps {
   user: UserProfile;
   onRequestTimeOff?: () => void;

@@ -1,5 +1,19 @@
 import type { PaletteRange } from "@mui/material/styles/createPalette";
 
+export const skyBlue = {
+	50: "#f0f7ff",
+	100: "#dceeff",
+	200: "#bae0ff",
+	300: "#8accff",
+	400: "#66baff", // Main color from the new theme
+	500: "#3b9eff",
+	600: "#227fff", 
+	700: "#1e68d0",
+	800: "#1E3A8A", // Dark color from the new theme
+	900: "#1a3c7d",
+	950: "#0f2146",
+  } satisfies PaletteRange;
+
 export const california = {
 	50: "#fffaea",
 	100: "#fff3c6",

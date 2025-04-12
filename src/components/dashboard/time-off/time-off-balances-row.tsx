@@ -102,7 +102,7 @@ export const TimeOffBalancesRow: React.FC<TimeOffBalancesRowProps> = ({
 
   const getCurrentTabColor = () => {
     switch (selectedTab) {
-      case 0: return '#4CAF50';
+      case 0: return theme.palette.primary.main;
       case 1: return theme.palette.error.main;
       case 2: return theme.palette.primary.main;
       default: return '#4CAF50';
