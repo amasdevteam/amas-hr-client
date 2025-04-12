@@ -1,21 +1,15 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-// import Card from "@mui/material/Card";
-import Grid from "@mui/material/Grid"; 
-import CardContent from "@mui/material/CardContent";
 import Container from "@mui/material/Container";
-import Divider from "@mui/material/Divider";
-// import Grid from "@mui/material/Grid2";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
 import { Helmet } from "react-helmet-async";
 
-
-//import { paths } from "@/paths";
 import { Header } from "@/components/landing/header";
-// import Testimonial from "@/components/landing/testimonial";
-
+import { HeroSection } from "@/components/landing/hero-section";
+import { TestimonialCarousel } from '@/components/landing/testimonial';
+import TrustedBySection from "@/components/landing/trust-section";
+import EmployeeTimeoffComponent from "@/components/landing/leave-section";
+import EmployeePayrollComponent from "@/components/landing/payroll-section";
+import CloudHrCta from "@/components/landing/signup-section"; // Adjust the path as necessary
 
 export function Page(): React.JSX.Element {
   return (
@@ -24,23 +18,63 @@ export function Page(): React.JSX.Element {
         <title>amasHR | HR Software that Works for Everyone</title>
         <meta name="description" content="The all-in-one HRIS platform that streamlines your HR workflows, enhances employee experience, and provides actionable insights for better decisions." />
       </Helmet>
-      <Box component="main" sx={{ bgcolor: "background.default" }}>
+      <Box 
+        component="main" 
+        sx={{ 
+          bgcolor: "#f7f7f7", // Off-white background color
+          minHeight: "100vh",
+          pb: 8 // Add padding at the bottom
+        }}
+      >
         <Header />
-        
+
         {/* Hero Section */}
-        
+        <Box sx={{ mb: 10 }}>
+          <HeroSection
+            title="Revamp Your HR Workflow with Cutting-Edge Cloud Solutions"
+            description="The best HR software for organizations across the spectrum, from startups to large enterprises, to manage employee records, payroll, time off, and attendance tracking within a single platform."
+            primaryCtaText="Get started"
+            secondaryCtaText="How it works"
+            imageUrl="/assets/amashr_hero.png"
+            // onPrimaryCtaClick={handleGetStartedClick}
+            // onSecondaryCtaClick={handleHowItWorksClick}
+          />
+        </Box>
 
         {/* Trusted By Section */}
-       
+        <Box sx={{ mb: 10 }}>
+          <Container maxWidth="lg">
+            <TrustedBySection />
+          </Container>
+        </Box>
 
-        {/* Features Section */}
-      
+        {/* Leave section */}
+        <Box sx={{ mb: 10 }}>
+          <Container maxWidth="lg">
+            <EmployeeTimeoffComponent />
+          </Container>
+        </Box>
 
+        {/* Payroll section */}
+        <Box sx={{ mb: 10 }}>
+          <Container maxWidth="lg">
+            <EmployeePayrollComponent />
+          </Container>
+        </Box>
 
-        {/* CTA Section */}
-      
+        {/* Testimonial Section */}
+        <Box sx={{ mb: 10 }}>
+          <Container maxWidth="lg">
+            <TestimonialCarousel />
+          </Container>
+        </Box>
 
-    
+        {/* Signup Section */}
+        <Box sx={{ mb: 10 }}>
+          <Container maxWidth="lg">
+            <CloudHrCta />
+          </Container>
+        </Box>
       </Box>
     </React.Fragment>
   );
