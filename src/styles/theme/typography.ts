@@ -1,4 +1,5 @@
-import type { TypographyOptions } from "@mui/material/styles/createTypography";
+import type { TypographyOptions } from "@mui/material"; // Correct import for typography options
+
 
 export const typography = {
 	fontFamily:

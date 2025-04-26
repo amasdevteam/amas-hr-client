@@ -1,4 +1,3 @@
-// ProfileSidebar.tsx - Updated with dialog navigation
 import React from 'react';
 import { 
   Box, 
@@ -7,6 +6,7 @@ import {
   Avatar,
   List,
   ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
   Divider,
@@ -30,12 +30,10 @@ interface UserProfile {
   manager: string;
 }
 
-
-
 interface ProfileSidebarProps {
   user: UserProfile;
   onRequestTimeOff?: () => void;
-  onViewTeamAbsences?: () => void; // Keep this prop for dialog handling
+  onViewTeamAbsences?: () => void;
   onMessageHR?: () => void;
 }
 
@@ -57,6 +55,7 @@ export const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
         height: '100%'
       }}
     >
+      {/* Header Section */}
       <Box sx={{ 
         p: 3, 
         bgcolor: theme.palette.primary.main,
@@ -84,7 +83,8 @@ export const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
           </Typography>
         </Box>
       </Box>
-      
+
+      {/* User Info Section */}
       <List sx={{ p: 2 }}>
         <ListItem sx={{ py: 1.5 }}>
           <ListItemIcon sx={{ minWidth: 40 }}>
@@ -93,17 +93,11 @@ export const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
           <ListItemText 
             primary="Joined" 
             secondary={user.joinDate} 
-            primaryTypographyProps={{ 
-              variant: 'body2', 
-              color: 'text.secondary'
-            }}
-            secondaryTypographyProps={{ 
-              variant: 'body2', 
-              fontWeight: 'medium' 
-            }}
+            primaryTypographyProps={{ variant: 'body2', color: 'text.secondary' }}
+            secondaryTypographyProps={{ variant: 'body2', fontWeight: 'medium' }}
           />
         </ListItem>
-        
+
         <ListItem sx={{ py: 1.5 }}>
           <ListItemIcon sx={{ minWidth: 40 }}>
             <PlaceIcon fontSize="small" color="action" />
@@ -111,17 +105,11 @@ export const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
           <ListItemText 
             primary="Location" 
             secondary={user.location} 
-            primaryTypographyProps={{ 
-              variant: 'body2', 
-              color: 'text.secondary'
-            }}
-            secondaryTypographyProps={{ 
-              variant: 'body2', 
-              fontWeight: 'medium' 
-            }}
+            primaryTypographyProps={{ variant: 'body2', color: 'text.secondary' }}
+            secondaryTypographyProps={{ variant: 'body2', fontWeight: 'medium' }}
           />
         </ListItem>
-        
+
         <ListItem sx={{ py: 1.5 }}>
           <ListItemIcon sx={{ minWidth: 40 }}>
             <ManagerIcon fontSize="small" color="action" />
@@ -129,27 +117,16 @@ export const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
           <ListItemText 
             primary="Manager" 
             secondary={user.manager} 
-            primaryTypographyProps={{ 
-              variant: 'body2', 
-              color: 'text.secondary'
-            }}
-            secondaryTypographyProps={{ 
-              variant: 'body2', 
-              fontWeight: 'medium' 
-            }}
+            primaryTypographyProps={{ variant: 'body2', color: 'text.secondary' }}
+            secondaryTypographyProps={{ variant: 'body2', fontWeight: 'medium' }}
           />
         </ListItem>
       </List>
-      
+
       <Divider />
-      
-      {/* Quick Actions Section */}
-      <Box 
-        sx={{ 
-          p: 2, 
-          bgcolor: theme.palette.background.default
-        }}
-      >
+
+      {/* Quick Actions */}
+      <Box sx={{ p: 2, bgcolor: theme.palette.background.default }}>
         <Typography 
           variant="subtitle2" 
           fontWeight="medium" 
@@ -160,74 +137,67 @@ export const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
         </Typography>
 
         <List disablePadding>
-          <ListItem 
-            button
-            disableRipple
-            onClick={onRequestTimeOff}
-            sx={{
-              py: 1.5,
-              border: 'none',
-              backgroundColor: 'transparent',
-              cursor: 'pointer',
-              '&:hover': {
-                bgcolor: '#f0f0f0'
-              }
-            }}
-          >
-            <ListItemIcon sx={{ minWidth: 36 }}>
-              <AddIcon fontSize="small" sx={{ color: theme.palette.success.main }} />
-            </ListItemIcon>
-            <ListItemText 
-              primary="Request Leave" 
-              primaryTypographyProps={{ variant: 'body2', fontWeight: 'medium' }}
-            />
+          <ListItem disablePadding>
+            <ListItemButton
+              disableRipple
+              onClick={onRequestTimeOff}
+              sx={{
+                py: 1.5,
+                border: 'none',
+                backgroundColor: 'transparent',
+                '&:hover': { bgcolor: '#f0f0f0' },
+              }}
+            >
+              <ListItemIcon sx={{ minWidth: 36 }}>
+                <AddIcon fontSize="small" sx={{ color: theme.palette.success.main }} />
+              </ListItemIcon>
+              <ListItemText 
+                primary="Request Leave" 
+                primaryTypographyProps={{ variant: 'body2', fontWeight: 'medium' }}
+              />
+            </ListItemButton>
           </ListItem>
 
-          {/* Out of Office - Keep using onClick for dialog */}
-          <ListItem 
-            button
-            disableRipple
-            onClick={onViewTeamAbsences}
-            sx={{
-              py: 1.5,
-              border: 'none',
-              backgroundColor: 'transparent',
-              cursor: 'pointer',
-              '&:hover': {
-                bgcolor: '#f0f0f0'
-              }
-            }}
-          >
-            <ListItemIcon sx={{ minWidth: 36 }}>
-              <TeamIcon fontSize="small" sx={{ color: theme.palette.primary.main }} />
-            </ListItemIcon>
-            <ListItemText 
-              primary="Out of Office" 
-              primaryTypographyProps={{ variant: 'body2', fontWeight: 'medium' }}
-            />
+          <ListItem disablePadding>
+            <ListItemButton
+              disableRipple
+              onClick={onViewTeamAbsences}
+              sx={{
+                py: 1.5,
+                border: 'none',
+                backgroundColor: 'transparent',
+                '&:hover': { bgcolor: '#f0f0f0' },
+              }}
+            >
+              <ListItemIcon sx={{ minWidth: 36 }}>
+                <TeamIcon fontSize="small" sx={{ color: theme.palette.primary.main }} />
+              </ListItemIcon>
+              <ListItemText 
+                primary="Out of Office" 
+                primaryTypographyProps={{ variant: 'body2', fontWeight: 'medium' }}
+              />
+            </ListItemButton>
           </ListItem>
 
-          <ListItem 
-            button
-            disableRipple
-            onClick={onMessageHR}
-            sx={{
-              py: 1.5,
-              border: 'none',
-              backgroundColor: 'transparent',
-              cursor: 'pointer',
-              '&:hover': {
-                bgcolor: '#f0f0f0'
-              }
-            }}
-          >
-            <ListItemIcon sx={{ minWidth: 36 }}>
-              <MessageIcon fontSize="small" sx={{ color: theme.palette.info.main }} />
-            </ListItemIcon>
-            <ListItemText 
-              primary="Message HR" 
-              primaryTypographyProps={{ variant: 'body2', fontWeight: 'medium' }}
-            />
+          <ListItem disablePadding>
+            <ListItemButton
+              disableRipple
+              onClick={onMessageHR}
+              sx={{
+                py: 1.5,
+                border: 'none',
+                backgroundColor: 'transparent',
+                '&:hover': { bgcolor: '#f0f0f0' },
+              }}
+            >
+              <ListItemIcon sx={{ minWidth: 36 }}>
+                <MessageIcon fontSize="small" sx={{ color: theme.palette.info.main }} />
+              </ListItemIcon>
+              <ListItemText 
+                primary="Message HR" 
+                primaryTypographyProps={{ variant: 'body2', fontWeight: 'medium' }}
+              />
+            </ListItemButton>
           </ListItem>
         </List>
       </Box>

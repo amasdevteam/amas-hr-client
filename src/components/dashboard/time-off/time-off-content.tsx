@@ -1,25 +1,28 @@
-// TimeOffContent.tsx
 import React, { useState } from 'react';
 import { Box, Paper, Tabs, Tab } from '@mui/material';
 import { Event as EventIcon } from '@mui/icons-material';
-// import { TimeOffBalancesRow } from './time-off-balances-row';
 import { UpcomingTimeOff } from './upcoming-time-off';
 import { TimeOffCalendar } from './time-off-calender';
 
-// Sample data
-const sampleBalances = {
-  vacation: 16,
-  sick: 8,
-  workFromHome: 12,
-};
+export type TimeOffType = 'vacation' | 'sick' | 'wfh' | 'holiday' 
+export type TimeOffStatus = 'approved' | 'pending' | 'rejected';
 
-const sampleUpcomingEvents = [
+export interface TimeOffEvent {
+  id: string;
+  date: string;
+  endDate?: string;
+  title: string;
+  type: TimeOffType;
+  status: TimeOffStatus;
+}
+
+const sampleUpcomingEvents: TimeOffEvent[] = [
   {
     id: '1',
     date: '2025-03-31',
     title: 'Eid El-Fitr',
-    type: 'holiday' as 'holiday',
-    status: 'approved' as 'approved',
+    type: 'holiday',
+    status: 'approved',
   },
   {
     id: '2',
@@ -42,24 +45,26 @@ const sampleUpcomingEvents = [
     date: '2025-05-01',
     endDate: '2025-05-05',
     title: 'Family Vacation',
-    type: 'vacation' as 'vacation',
-    status: 'pending' as 'pending',
+    type: 'vacation',
+    status: 'pending',
   },
 ];
 
-const calendarEvents = [
+const calendarEvents: TimeOffEvent[] = [
   ...sampleUpcomingEvents,
   {
     id: '5',
     date: '2025-04-12',
     title: 'Team Building Day',
-    type: 'meeting',
+    type: 'holiday',
+    status: 'approved',
   },
   {
     id: '6',
     date: '2025-04-15',
     title: 'Quarterly Review',
-    type: 'meeting',
+    type: 'wfh', // Added a valid type
+    status: 'approved',
   },
 ];
 
@@ -80,22 +85,14 @@ const TimeOffContent: React.FC<TimeOffContentProps> = ({
 
   const handleEditEvent = (id: string) => {
     console.log('Edit event:', id);
-    // Implement edit functionality
   };
 
   const handleCancelEvent = (id: string) => {
     console.log('Cancel event:', id);
-    // Implement cancel functionality
   };
 
   return (
     <>
-      {/* <TimeOffBalancesRow 
-        balances={sampleBalances}
-        onViewHistory={onViewHistory}
-        onRequest={onRequest}
-      /> */}
-
       <Paper sx={{ mb: 4, borderRadius: 2, boxShadow: '0 2px 10px rgba(0,0,0,0.08)' }}>
         <Tabs
           value={activeTab}
@@ -106,7 +103,7 @@ const TimeOffContent: React.FC<TimeOffContentProps> = ({
           <Tab label="Upcoming" icon={<EventIcon />} iconPosition="start" />
           <Tab label="Calendar" />
         </Tabs>
-        
+
         <Box sx={{ p: { xs: 1, sm: 2 } }}>
           {activeTab === 0 && (
             <UpcomingTimeOff 
@@ -115,7 +112,7 @@ const TimeOffContent: React.FC<TimeOffContentProps> = ({
               onCancel={handleCancelEvent}
             />
           )}
-          
+
           {activeTab === 1 && (
             <TimeOffCalendar 
               events={calendarEvents}

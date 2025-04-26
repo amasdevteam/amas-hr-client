@@ -67,13 +67,13 @@ const calendarEvents = [
     id: "5",
     date: "2025-04-12",
     title: "Team Building Day",
-    type: "meeting",
+    type: "meeting" as const,
   },
   {
     id: "6",
     date: "2025-04-15",
     title: "Quarterly Review",
-    type: "meeting",
+    type: "meeting" as const,
   },
 ];
 
@@ -155,6 +155,8 @@ export function Page() {
           <>
             <TimeOffBalancesRow
               balances={sampleBalances}
+              taken={{ vacation: 5, sick: 2, workFromHome: 3 }} // Example values for taken
+              percentages={{ vacation: 31, sick: 25, workFromHome: 25 }} // Example percentages
               onViewHistory={handleViewHistory}
               onRequest={handleRequestTimeOff}
             />

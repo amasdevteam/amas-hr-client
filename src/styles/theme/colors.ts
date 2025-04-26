@@ -1,20 +1,38 @@
-import type { PaletteRange } from "@mui/material/styles/createPalette";
+// src/styles/theme/colors.ts
 
-export const skyBlue = {
+// Define the PaletteRange interface with an index signature for numeric keys
+export interface PaletteRange {
+	[key: number]: string;  // This allows numeric keys (like 50, 100, etc.) to access the color values
+	50: string;
+	100: string;
+	200: string;
+	300: string;
+	400: string;
+	500: string;
+	600: string;
+	700: string;
+	800: string;
+	900: string;
+	950: string;
+  }
+  
+  // Color ramp for Sky Blue
+  export const skyBlue: PaletteRange = {
 	50: "#f0f7ff",
 	100: "#dceeff",
 	200: "#bae0ff",
 	300: "#8accff",
-	400: "#66baff", // Main color from the new theme
+	400: "#66baff",
 	500: "#3b9eff",
-	600: "#227fff", 
+	600: "#227fff",
 	700: "#1e68d0",
-	800: "#1E3A8A", // Dark color from the new theme
+	800: "#1E3A8A",
 	900: "#1a3c7d",
 	950: "#0f2146",
-  } satisfies PaletteRange;
-
-export const california = {
+  };
+  
+  // Color ramp for California
+  export const california: PaletteRange = {
 	50: "#fffaea",
 	100: "#fff3c6",
 	200: "#ffe587",
@@ -26,9 +44,10 @@ export const california = {
 	800: "#953b0b",
 	900: "#7b310c",
 	950: "#471701",
-} satisfies PaletteRange;
-
-export const chateauGreen = {
+  };
+  
+  // Color ramp for Chateau Green
+  export const chateauGreen: PaletteRange = {
 	50: "#edfcf2",
 	100: "#d2f9de",
 	200: "#aaf0c4",
@@ -40,9 +59,10 @@ export const chateauGreen = {
 	800: "#095c37",
 	900: "#094b2f",
 	950: "#032b1a",
-} satisfies PaletteRange;
-
-export const kepple = {
+  };
+  
+  // Color ramp for Kepple
+  export const kepple: PaletteRange = {
 	50: "#f0fdfa",
 	100: "#ccfbef",
 	200: "#9af5e1",
@@ -54,9 +74,10 @@ export const kepple = {
 	800: "#115e56",
 	900: "#134e48",
 	950: "#042f2c",
-} satisfies PaletteRange;
-
-export const neonBlue = {
+  };
+  
+  // Color ramp for Neon Blue
+  export const neonBlue: PaletteRange = {
 	50: "#ecf0ff",
 	100: "#dde3ff",
 	200: "#c2cbff",
@@ -68,9 +89,10 @@ export const neonBlue = {
 	800: "#3725ae",
 	900: "#302689",
 	950: "#1e1650",
-} satisfies PaletteRange;
-
-export const nevada = {
+  };
+  
+  // Color ramp for Nevada
+  export const nevada: PaletteRange = {
 	50: "#fbfcfe",
 	100: "#f0f4f8",
 	200: "#dde7ee",
@@ -82,9 +104,10 @@ export const nevada = {
 	800: "#202427",
 	900: "#121517",
 	950: "#090a0b",
-} satisfies PaletteRange;
-
-export const redOrange = {
+  };
+  
+  // Color ramp for Red Orange
+  export const redOrange: PaletteRange = {
 	50: "#fef3f2",
 	100: "#fee4e2",
 	200: "#ffcdc9",
@@ -96,9 +119,10 @@ export const redOrange = {
 	800: "#9a221a",
 	900: "#80231c",
 	950: "#460d09",
-} satisfies PaletteRange;
-
-export const royalBlue = {
+  };
+  
+  // Color ramp for Royal Blue
+  export const royalBlue: PaletteRange = {
 	50: "#ecf3ff",
 	100: "#dce8ff",
 	200: "#c0d4ff",
@@ -110,9 +134,10 @@ export const royalBlue = {
 	800: "#2225b1",
 	900: "#24298b",
 	950: "#151651",
-} satisfies PaletteRange;
-
-export const shakespeare = {
+  };
+  
+  // Color ramp for Shakespeare
+  export const shakespeare: PaletteRange = {
 	50: "#ecfdff",
 	100: "#cff7fe",
 	200: "#a4eefd",
@@ -124,9 +149,10 @@ export const shakespeare = {
 	800: "#145876",
 	900: "#154964",
 	950: "#082f44",
-} satisfies PaletteRange;
-
-export const stormGrey = {
+  };
+  
+  // Color ramp for Storm Grey
+  export const stormGrey: PaletteRange = {
 	50: "#f9fafb",
 	100: "#f1f1f4",
 	200: "#dcdfe4",
@@ -138,9 +164,10 @@ export const stormGrey = {
 	800: "#313749",
 	900: "#212636",
 	950: "#121621",
-} satisfies PaletteRange;
-
-export const tomatoOrange = {
+  };
+  
+  // Color ramp for Tomato Orange
+  export const tomatoOrange: PaletteRange = {
 	50: "#fff3ed",
 	100: "#ffe2d4",
 	200: "#ffc1a8",
@@ -152,4 +179,8 @@ export const tomatoOrange = {
 	800: "#9f2c0f",
 	900: "#7e1110",
 	950: "#440608",
-} satisfies PaletteRange;
+  };
+  
+  // Now, your PaletteRange interface is fully compatible with TypeScript,
+  // and your color definitions should work correctly in the theme.
+  

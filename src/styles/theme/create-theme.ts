@@ -1,12 +1,14 @@
 import { createTheme as createMuiTheme } from "@mui/material/styles";
-import type { PaletteOptions } from "@mui/material/styles";
+import { PaletteOptions, PaletteColorOptions } from "@mui/material";
+// import { TypographyOptions } from "@mui/material";
 
-import { colorSchemes } from "./color-schemes";
+import { colorSchemes } from "./color-schemes"; // Import your color schemes
 import { components } from "./components/components";
 import { shadows } from "./shadows";
 import type { Direction, PrimaryColor, Theme } from "./types";
 import { typography } from "./typography";
 
+// The Config interface allows for configuration options like primary color and direction
 interface Config {
   primaryColor: PrimaryColor;
   direction?: Direction;
@@ -14,8 +16,20 @@ interface Config {
   useCustomTypography?: boolean;
 }
 
+// Create a custom type to handle extended palette color options
+interface CustomPaletteColorOptions {
+  main: string;
+  light: string;
+  dark: string;
+  contrastText: string;
+  activated?: string;
+  hovered?: string;
+  selected?: string;
+}
+
+// Custom theme creation function
 function customCreateTheme(config: Config): Theme {
-  // Create the base theme with existing structure
+  // Create the base theme using your existing color schemes and MUI utilities
   const baseTheme = createMuiTheme({
     breakpoints: { values: { xs: 0, sm: 600, md: 900, lg: 1200, xl: 1440 } },
     colorSchemes: colorSchemes({ primaryColor: config.primaryColor }),
@@ -31,20 +45,18 @@ function customCreateTheme(config: Config): Theme {
 
   // Apply custom overrides if requested
   if (config.useCustomColors || config.useCustomTypography) {
-    // Define custom palette as PaletteOptions to match expected type
-    const customPalette: PaletteOptions = config.useCustomColors 
+    // Define custom palette using MUI's PaletteOptions but extended with custom fields like `activated`, `hovered`, `selected`
+    const customPalette: PaletteOptions = config.useCustomColors
       ? {
           primary: {
             main: '#66baff',
             dark: '#1E3A8A',
             contrastText: '#ffffff',
-            // Add required properties for PaletteColor
             light: '#88ccff',
-            // These properties match the structure in your color-schemes.ts
-            activated: "rgba(102, 186, 255, 0.12)", // Using rgba for primary.main with opacity
+            activated: "rgba(102, 186, 255, 0.12)", 
             hovered: "rgba(102, 186, 255, 0.08)",
             selected: "rgba(102, 186, 255, 0.16)"
-          },
+          } as CustomPaletteColorOptions,  // Use the custom type for primary color
           secondary: {
             main: '#ff4081',
             dark: '#c60055',
@@ -53,7 +65,7 @@ function customCreateTheme(config: Config): Theme {
             activated: "rgba(255, 64, 129, 0.12)",
             hovered: "rgba(255, 64, 129, 0.08)",
             selected: "rgba(255, 64, 129, 0.16)"
-          },
+          } as CustomPaletteColorOptions,  // Use the custom type for secondary color
           success: {
             main: '#66baff',
             light: '#68d391',
@@ -62,7 +74,7 @@ function customCreateTheme(config: Config): Theme {
             activated: "rgba(56, 161, 105, 0.12)",
             hovered: "rgba(56, 161, 105, 0.08)",
             selected: "rgba(56, 161, 105, 0.16)"
-          },
+          } as CustomPaletteColorOptions,  // Use the custom type for success color
           warning: {
             main: '#ED8936',
             light: '#fbd38d',
@@ -71,7 +83,7 @@ function customCreateTheme(config: Config): Theme {
             activated: "rgba(237, 137, 54, 0.12)",
             hovered: "rgba(237, 137, 54, 0.08)",
             selected: "rgba(237, 137, 54, 0.16)"
-          },
+          } as CustomPaletteColorOptions,  // Use the custom type for warning color
           error: {
             main: '#E53E3E',
             light: '#fc8181',
@@ -80,7 +92,7 @@ function customCreateTheme(config: Config): Theme {
             activated: "rgba(229, 62, 62, 0.12)",
             hovered: "rgba(229, 62, 62, 0.08)",
             selected: "rgba(229, 62, 62, 0.16)"
-          },
+          } as CustomPaletteColorOptions,  // Use the custom type for error color
           info: {
             main: '#3182CE',
             light: '#63b3ed',
@@ -89,7 +101,7 @@ function customCreateTheme(config: Config): Theme {
             activated: "rgba(49, 130, 206, 0.12)",
             hovered: "rgba(49, 130, 206, 0.08)",
             selected: "rgba(49, 130, 206, 0.16)"
-          },
+          } as CustomPaletteColorOptions,  // Use the custom type for info color
           text: {
             primary: '#2D3748',
             secondary: '#A0AEC0',
@@ -99,7 +111,7 @@ function customCreateTheme(config: Config): Theme {
             default: '#F5F7FA',
             paper: '#ffffff'
           },
-          // Add these properties to match your extended palette structure
+          // Include any other necessary custom properties like divider, mode, etc.
           divider: '#E2E8F0',
           mode: 'light'
         }

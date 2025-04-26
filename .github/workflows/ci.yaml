@@ -1,0 +1,40 @@
+name: CI/CD for HR-Web
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🛎️ Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: 📦 Install Dependencies
+        run: npm install
+
+      - name: 🧪 Run Tests
+        run: npm run test
+
+      - name: 🧹 Lint Code
+        run: npm run lint
+
+      - name: 🛠️ Build App
+        run: npm run build
+
+      - name: 🐳 Build Docker Image
+        run: |
+          docker build -t ghcr.io/allymaumba/hr-web:${{ github.sha }} .
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          docker push ghcr.io/allymaumba/hr-web:${{ github.sha }}
+
+      - name: 📘 Update image tag in amashr-k8s
+        uses: allymaumba/update-k8s-tag-action@v1
+        with:
+          image_tag: ${{ github.sha }}
+          service_name: hr-web
+          service_path: k8s/charts/frontend/hr-web/values.yaml
+          k8s_repo: github.com/allymaumba/amashr-k8s
+          github_token: ${{ secrets.K8S_REPO_PAT }}

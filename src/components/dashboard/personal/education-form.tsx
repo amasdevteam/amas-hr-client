@@ -1,9 +1,7 @@
-// EducationForm.tsx
 import React from 'react';
 import {
   Box,
   Button,
-  Grid,
   TextField,
   Stack,
   Typography,
@@ -32,112 +30,110 @@ const EducationForm: React.FC<EducationFormProps> = ({
   onChange
 }) => {
   const currentYear = new Date().getFullYear();
-  
+
   return (
     <div>
       {educations.map((education, index) => (
-        <Box 
-          key={index} 
-          sx={{ 
-            mb: 4, 
-            pb: 2, 
+        <Box
+          key={index}
+          sx={{
+            mb: 4,
+            pb: 2,
             borderBottom: index < educations.length - 1 ? '1px solid #e0e0e0' : 'none',
             position: 'relative'
           }}
         >
+          {/* Header */}
           <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1}>
             <Stack direction="row" spacing={1} alignItems="center">
               <Typography variant="subtitle1">
                 {education.isPrimary ? "Primary Education" : `Education ${index + 1}`}
               </Typography>
               {education.isPrimary && (
-                <Chip 
-                  icon={<CheckCircleIcon />} 
-                  label="Primary" 
-                  size="small" 
-                  color="primary" 
+                <Chip
+                  icon={<CheckCircleIcon />}
+                  label="Primary"
+                  size="small"
+                  color="primary"
                   variant="outlined"
                 />
               )}
             </Stack>
-            <Stack direction="row" spacing={1}>
-              {isEditing && (
-                <>
-                  {!education.isPrimary && (
-                    <Button 
-                      size="small" 
-                      onClick={() => onSetPrimaryEducation(index)}
-                      variant="outlined"
-                    >
-                      Set as Primary
-                    </Button>
-                  )}
-                  {educations.length > 1 && (
-                    <Button 
-                      size="small" 
-                      color="error" 
-                      variant="outlined"
-                      onClick={() => onRemoveEducation(index)}
-                      startIcon={<DeleteOutlineIcon />}
-                    >
-                      Remove
-                    </Button>
-                  )}
-                </>
-              )}
-            </Stack>
+            {isEditing && (
+              <Stack direction="row" spacing={1}>
+                {!education.isPrimary && (
+                  <Button
+                    size="small"
+                    onClick={() => onSetPrimaryEducation(index)}
+                    variant="outlined"
+                  >
+                    Set as Primary
+                  </Button>
+                )}
+                {educations.length > 1 && (
+                  <Button
+                    size="small"
+                    color="error"
+                    variant="outlined"
+                    onClick={() => onRemoveEducation(index)}
+                    startIcon={<DeleteOutlineIcon />}
+                  >
+                    Remove
+                  </Button>
+                )}
+              </Stack>
+            )}
           </Stack>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Institution"
-                value={education.institution}
-                onChange={(e) => onChange("educations", "institution", e.target.value, index)}
-                fullWidth
-                disabled={!isEditing}
-                required
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Degree"
-                value={education.degree}
-                onChange={(e) => onChange("educations", "degree", e.target.value, index)}
-                fullWidth
-                disabled={!isEditing}
-                required
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Field of Study"
-                value={education.field}
-                onChange={(e) => onChange("educations", "field", e.target.value, index)}
-                fullWidth
-                disabled={!isEditing}
-                required
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Graduation Year"
-                value={education.year}
-                onChange={(e) => onChange("educations", "year", e.target.value, index)}
-                fullWidth
-                type="number"
-                disabled={!isEditing}
-                required
-                inputProps={{ min: 1900, max: currentYear }}
-              />
-            </Grid>
-          </Grid>
+
+          {/* Form Grid */}
+          <Box
+            display="grid"
+            gap={2}
+            gridTemplateColumns={{ xs: '1fr', sm: '1fr 1fr' }}
+          >
+            <TextField
+              label="Institution"
+              value={education.institution}
+              onChange={(e) => onChange("educations", "institution", e.target.value, index)}
+              fullWidth
+              disabled={!isEditing}
+              required
+            />
+            <TextField
+              label="Degree"
+              value={education.degree}
+              onChange={(e) => onChange("educations", "degree", e.target.value, index)}
+              fullWidth
+              disabled={!isEditing}
+              required
+            />
+            <TextField
+              label="Field of Study"
+              value={education.field}
+              onChange={(e) => onChange("educations", "field", e.target.value, index)}
+              fullWidth
+              disabled={!isEditing}
+              required
+            />
+            <TextField
+              label="Graduation Year"
+              value={education.year}
+              onChange={(e) => onChange("educations", "year", e.target.value, index)}
+              type="number"
+              fullWidth
+              disabled={!isEditing}
+              required
+              inputProps={{ min: 1900, max: currentYear }}
+            />
+          </Box>
         </Box>
       ))}
-      
+
+      {/* Add New Education Button */}
       {isEditing && (
-        <Button 
-          variant="outlined" 
-          startIcon={<AddIcon />} 
+        <Button
+          variant="outlined"
+          startIcon={<AddIcon />}
           onClick={onAddEducation}
           sx={{ mt: 2 }}
           fullWidth

@@ -26,7 +26,7 @@ export function Option({ selected, ...props }: OptionProps): React.JSX.Element {
 					...(selected && { boxShadow: "0 0 0 2px var(--mui-palette-primary-main)" }),
 				},
 			}}
-			variant="soft"
+			variant="filled"
 		/>
 	);
 }

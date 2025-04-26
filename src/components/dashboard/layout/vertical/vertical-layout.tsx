@@ -10,7 +10,7 @@ import { useSettings } from "@/components/core/settings/settings-context";
 
 import { MainNav } from "./main-nav";
 import { SideNav } from "./side-nav";
-import { MainHeader } from "../../header/main-header"; // Import the MainHeader component
+
 
 export interface VerticalLayoutProps {
   children?: React.ReactNode;

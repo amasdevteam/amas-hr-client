@@ -94,8 +94,8 @@ export interface SocialMedia {
   twitter: string;
   facebook: string;
   github: string;
-  // platform: string;
-  // url: string;
+  platform: string;
+  url: string;
 }
 
 // Education interface
@@ -131,6 +131,7 @@ export type SocialMediaAccount = {
   platform: string;
   url: string;
 };
+
 
 // TabPanel component
 export function TabPanel(props: TabPanelProps) {

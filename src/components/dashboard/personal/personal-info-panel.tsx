@@ -1,4 +1,3 @@
-// PersonalInfoPanel.tsx
 import React, { useState } from "react";
 import {
   Box,
@@ -15,7 +14,6 @@ import BasicInfoForm from './basic-info-form';
 import AddressForm from './address-form';
 import EmergencyContactForm from './emergency-contact-form';
 import EducationForm from './education-form';
-import SocialMediaForm, { SocialMediaAccount } from './social-media-form';
 import DocumentsForm from './documents-form';
 
 // Import types
@@ -35,7 +33,6 @@ export const PersonalInfoPanel: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
 
-  // Initialize form data with socialMediaAccounts instead of socialMedia
   const [formData, setFormData] = useState<FormDataType>({
     fullName: "Emmanuel Muro",
     email: "emuro@sanku.com",
@@ -43,14 +40,10 @@ export const PersonalInfoPanel: React.FC = () => {
     dob: "1990-01-01",
     nationality: "Tanzanian",
     maritalStatus: "Single",
-    
-    // Added fields for Tanzanian context
     nationalId: "12345678901234567890",
     nssf: "NSSF1234567890123",
     tin: "123456789",
     driverLicense: "T12345678901",
-    
-    // Addresses array
     addresses: [
       {
         street: "123 Uhuru Street",
@@ -61,8 +54,6 @@ export const PersonalInfoPanel: React.FC = () => {
         isPrimary: true,
       }
     ],
-
-    // Emergency contacts array
     emergencyContacts: [
       {
         name: "John Doe",
@@ -71,16 +62,6 @@ export const PersonalInfoPanel: React.FC = () => {
         email: "john@example.com",
       }
     ],
-
-    // Social media accounts - converted from object to array format
-    socialMediaAccounts: [
-      { platform: "linkedin", url: "linkedin.com/in/emmanuel" },
-      { platform: "twitter", url: "@emmanuel" },
-      { platform: "facebook", url: "facebook.com/emmanuel" },
-      { platform: "github", url: "github.com/emmanuelmuro" }
-    ],
-
-    // Education array
     educations: [
       {
         institution: "University of Dar es Salaam",
@@ -90,12 +71,10 @@ export const PersonalInfoPanel: React.FC = () => {
         isPrimary: true
       }
     ],
-
-    // Documents array
     documents: [],
+    socialMediaAccounts: [], // Add this property to match the FormDataType
   });
 
-  // Error state for validation
   const [errors, setErrors] = useState<ErrorState>({
     nationalId: null,
     nssf: null,
@@ -105,7 +84,7 @@ export const PersonalInfoPanel: React.FC = () => {
     email: null,
   });
 
-  // Action handlers for addresses
+  // Address Handlers
   const addAddress = () => {
     setFormData(prev => ({
       ...prev,
@@ -122,14 +101,14 @@ export const PersonalInfoPanel: React.FC = () => {
 
   const removeAddress = (index: number) => {
     if (formData.addresses.length <= 1) return;
-    
+
     const isPrimaryRemoved = formData.addresses[index].isPrimary;
     const updatedAddresses = formData.addresses.filter((_, i) => i !== index);
-    
+
     if (isPrimaryRemoved && updatedAddresses.length > 0) {
       updatedAddresses[0].isPrimary = true;
     }
-    
+
     setFormData(prev => ({
       ...prev,
       addresses: updatedAddresses
@@ -146,7 +125,7 @@ export const PersonalInfoPanel: React.FC = () => {
     }));
   };
 
-  // Action handlers for emergency contacts
+  // Emergency Contact Handlers
   const addEmergencyContact = () => {
     setFormData(prev => ({
       ...prev,
@@ -161,38 +140,14 @@ export const PersonalInfoPanel: React.FC = () => {
 
   const removeEmergencyContact = (index: number) => {
     if (formData.emergencyContacts.length <= 1) return;
-    
+
     setFormData(prev => ({
       ...prev,
       emergencyContacts: prev.emergencyContacts.filter((_, i) => i !== index)
     }));
   };
 
-  // Action handlers for social media accounts
-  const addSocialMediaAccount = (account: SocialMediaAccount) => {
-    setFormData(prev => ({
-      ...prev,
-      socialMediaAccounts: [...prev.socialMediaAccounts, account]
-    }));
-  };
-
-  const removeSocialMediaAccount = (index: number) => {
-    setFormData(prev => ({
-      ...prev,
-      socialMediaAccounts: prev.socialMediaAccounts.filter((_, i) => i !== index)
-    }));
-  };
-
-  const updateSocialMediaAccount = (index: number, field: 'platform' | 'url', value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      socialMediaAccounts: prev.socialMediaAccounts.map((account, i) => 
-        i === index ? { ...account, [field]: value } : account
-      )
-    }));
-  };
-
-  // Action handlers for education
+  // Education Handlers
   const addEducation = () => {
     setFormData(prev => ({
       ...prev,
@@ -208,14 +163,14 @@ export const PersonalInfoPanel: React.FC = () => {
 
   const removeEducation = (index: number) => {
     if (formData.educations.length <= 1) return;
-    
+
     const isPrimaryRemoved = formData.educations[index].isPrimary;
     const updatedEducations = formData.educations.filter((_, i) => i !== index);
-    
+
     if (isPrimaryRemoved && updatedEducations.length > 0) {
       updatedEducations[0].isPrimary = true;
     }
-    
+
     setFormData(prev => ({
       ...prev,
       educations: updatedEducations
@@ -232,11 +187,11 @@ export const PersonalInfoPanel: React.FC = () => {
     }));
   };
 
-  // Document handlers
+  // Document Handlers
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files.length > 0) {
-      setFormData((prev) => ({
+      setFormData(prev => ({
         ...prev,
         documents: [...prev.documents, ...Array.from(files)],
       }));
@@ -250,78 +205,43 @@ export const PersonalInfoPanel: React.FC = () => {
     }));
   };
 
-  // General change handler for form fields
-  const handleChange = (
-    section: string,
-    key: string,
-    value: string | number,
-    index?: number
-  ) => {
+  // Change Handler
+  const handleChange = (section: string, key: string, value: string | number, index?: number) => {
     if (section === "main") {
-      setFormData((prev) => ({ ...prev, [key]: value }));
-      
-      // Validate field after change
-      if (key === "nationalId" || key === "nssf" || key === "tin" || 
-          key === "driverLicense" || key === "phone" || key === "email") {
+      setFormData(prev => ({ ...prev, [key]: value }));
+
+      // Re-validate
+      if (key in errors) {
         let validationError = null;
-        
         switch (key) {
-          case "nationalId": 
-            validationError = validateNationalId(value as string);
-            break;
-          case "nssf": 
-            validationError = validateNSSF(value as string);
-            break;
-          case "tin": 
-            validationError = validateTIN(value as string);
-            break;
-          case "driverLicense": 
-            validationError = validateDriverLicense(value as string);
-            break;
-          case "phone": 
-            validationError = validatePhone(value as string);
-            break;
-          case "email": 
-            validationError = validateEmail(value as string);
-            break;
+          case "nationalId": validationError = validateNationalId(value as string); break;
+          case "nssf": validationError = validateNSSF(value as string); break;
+          case "tin": validationError = validateTIN(value as string); break;
+          case "driverLicense": validationError = validateDriverLicense(value as string); break;
+          case "phone": validationError = validatePhone(value as string); break;
+          case "email": validationError = validateEmail(value as string); break;
         }
-        
-        setErrors(prev => ({
-          ...prev,
-          [key]: validationError
-        }));
+        setErrors(prev => ({ ...prev, [key]: validationError }));
       }
     } else if (section === "addresses" && index !== undefined) {
-      setFormData((prev) => ({
+      setFormData(prev => ({
         ...prev,
-        addresses: prev.addresses.map((addr, i) => 
-          i === index ? { ...addr, [key]: value } : addr
-        )
+        addresses: prev.addresses.map((addr, i) => i === index ? { ...addr, [key]: value } : addr)
       }));
     } else if (section === "emergencyContacts" && index !== undefined) {
-      setFormData((prev) => ({
+      setFormData(prev => ({
         ...prev,
-        emergencyContacts: prev.emergencyContacts.map((contact, i) => 
-          i === index ? { ...contact, [key]: value } : contact
-        )
+        emergencyContacts: prev.emergencyContacts.map((contact, i) => i === index ? { ...contact, [key]: value } : contact)
       }));
     } else if (section === "educations" && index !== undefined) {
-      setFormData((prev) => ({
+      setFormData(prev => ({
         ...prev,
-        educations: prev.educations.map((edu, i) => 
-          i === index ? { ...edu, [key]: value } : edu
-        )
+        educations: prev.educations.map((edu, i) => i === index ? { ...edu, [key]: value } : edu)
       }));
-    } else if (section === "socialMedia") {
-      // For backward compatibility - can log a warning and ignore
-      console.warn('The socialMedia object is deprecated. Use socialMediaAccounts array instead.');
-    } else {
-      // This else block should never be reached with proper usage
-      console.warn(`Unhandled section: ${section}`);
     }
   };
 
-  // Validate form before saving
+  // Form Validation
   const validateForm = () => {
     const newErrors: ErrorState = {
       nationalId: validateNationalId(formData.nationalId),
@@ -331,21 +251,14 @@ export const PersonalInfoPanel: React.FC = () => {
       phone: validatePhone(formData.phone),
       email: validateEmail(formData.email),
     };
-
     setErrors(newErrors);
-    
-    // Check if there are any errors
     return !Object.values(newErrors).some(error => error !== null);
   };
 
-  const toggleEdit = () => {
-    setIsEditing(!isEditing);
-  };
+  const toggleEdit = () => setIsEditing(!isEditing);
 
   const handleSave = () => {
-    const isValid = validateForm();
-    
-    if (isValid) {
+    if (validateForm()) {
       console.log("Saved data:", formData);
       setIsEditing(false);
     } else {
@@ -379,33 +292,16 @@ export const PersonalInfoPanel: React.FC = () => {
         <Tab label="Address" />
         <Tab label="Emergency Contact" />
         <Tab label="Education" />
-        <Tab label="Social Media" />
         <Tab label="Documents" />
       </Tabs>
 
       <Box sx={{ p: 2 }}>
-        {/* BASIC INFO */}
         <TabPanel value={activeTab} index={0}>
-          <BasicInfoForm 
-            fullName={formData.fullName}
-            email={formData.email}
-            phone={formData.phone}
-            dob={formData.dob}
-            nationality={formData.nationality}
-            maritalStatus={formData.maritalStatus}
-            nationalId={formData.nationalId}
-            nssf={formData.nssf}
-            tin={formData.tin}
-            driverLicense={formData.driverLicense}
-            errors={errors}
-            isEditing={isEditing}
-            onChange={handleChange}
-          />
+          <BasicInfoForm {...formData} errors={errors} isEditing={isEditing} onChange={handleChange} />
         </TabPanel>
 
-        {/* ADDRESS */}
         <TabPanel value={activeTab} index={1}>
-          <AddressForm 
+          <AddressForm
             addresses={formData.addresses}
             isEditing={isEditing}
             onAddAddress={addAddress}
@@ -415,9 +311,8 @@ export const PersonalInfoPanel: React.FC = () => {
           />
         </TabPanel>
 
-        {/* EMERGENCY CONTACT */}
         <TabPanel value={activeTab} index={2}>
-          <EmergencyContactForm 
+          <EmergencyContactForm
             contacts={formData.emergencyContacts}
             isEditing={isEditing}
             onAddContact={addEmergencyContact}
@@ -426,9 +321,8 @@ export const PersonalInfoPanel: React.FC = () => {
           />
         </TabPanel>
 
-        {/* EDUCATION */}
         <TabPanel value={activeTab} index={3}>
-          <EducationForm 
+          <EducationForm
             educations={formData.educations}
             isEditing={isEditing}
             onAddEducation={addEducation}
@@ -438,20 +332,8 @@ export const PersonalInfoPanel: React.FC = () => {
           />
         </TabPanel>
 
-        {/* SOCIAL MEDIA - Updated to use the new dynamic component */}
         <TabPanel value={activeTab} index={4}>
-          <SocialMediaForm 
-            socialMediaAccounts={formData.socialMediaAccounts}
-            isEditing={isEditing}
-            onAddAccount={addSocialMediaAccount}
-            onRemoveAccount={removeSocialMediaAccount}
-            onUpdateAccount={updateSocialMediaAccount}
-          />
-        </TabPanel>
-
-        {/* DOCUMENTS */}
-        <TabPanel value={activeTab} index={5}>
-          <DocumentsForm 
+          <DocumentsForm
             documents={formData.documents}
             isEditing={isEditing}
             onDocumentUpload={handleFileUpload}

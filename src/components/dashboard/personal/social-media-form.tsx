@@ -1,12 +1,10 @@
-// SocialMediaForm.tsx
 import React, { useState } from 'react';
 import {
-  Grid,
-  TextField,
+  Box,
   Button,
+  TextField,
   IconButton,
   Stack,
-  Box,
   Typography,
   Dialog,
   DialogTitle,
@@ -17,7 +15,6 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-// Updated interface to support dynamic keys
 export interface SocialMediaAccount {
   platform: string;
   url: string;
@@ -42,36 +39,30 @@ const SocialMediaForm: React.FC<SocialMediaFormProps> = ({
   const [newPlatform, setNewPlatform] = useState('');
   const [newUrl, setNewUrl] = useState('');
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
+  const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
-    // Reset form
     setNewPlatform('');
     setNewUrl('');
   };
 
   const handleAdd = () => {
     if (newPlatform.trim() && newUrl.trim()) {
-      onAddAccount({
-        platform: newPlatform.trim(),
-        url: newUrl.trim()
-      });
+      onAddAccount({ platform: newPlatform.trim(), url: newUrl.trim() });
       handleClose();
     }
   };
 
   return (
     <Box>
+      {/* Top section: Title + Add Button */}
       <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h6">Social Media Accounts</Typography>
         {isEditing && (
-          <Button 
-            startIcon={<AddIcon />} 
-            variant="outlined" 
-            color="primary" 
+          <Button
+            startIcon={<AddIcon />}
+            variant="outlined"
+            color="primary"
             size="small"
             onClick={handleOpen}
           >
@@ -80,63 +71,60 @@ const SocialMediaForm: React.FC<SocialMediaFormProps> = ({
         )}
       </Stack>
 
-      <Grid container spacing={3}>
+      {/* Social Media Accounts List */}
+      <Box display="grid" gap={3}>
         {socialMediaAccounts.length > 0 ? (
           socialMediaAccounts.map((account, index) => (
-            <Grid item xs={12} key={index}>
-              <Stack 
-                direction={{ xs: 'column', sm: 'row' }}
-                spacing={2} 
-                sx={{ 
-                  p: 2, 
-                  border: '1px solid #e0e0e0', 
-                  borderRadius: 1,
-                  position: 'relative'
-                }}
-              >
-                <TextField
-                  label="Platform"
-                  value={account.platform}
-                  onChange={(e) => onUpdateAccount(index, 'platform', e.target.value)}
-                  disabled={!isEditing}
-                  fullWidth
-                  sx={{ flex: 1 }}
-                />
-                <TextField
-                  label="URL/Username"
-                  value={account.url}
-                  onChange={(e) => onUpdateAccount(index, 'url', e.target.value)}
-                  disabled={!isEditing}
-                  fullWidth
-                  sx={{ flex: 2 }}
-                />
-                {isEditing && (
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Tooltip title="Remove">
-                      <IconButton 
-                        color="error" 
-                        onClick={() => onRemoveAccount(index)}
-                        size="small"
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </Box>
-                )}
-              </Stack>
-            </Grid>
+            <Box
+              key={index}
+              sx={{
+                p: 2,
+                border: '1px solid #e0e0e0',
+                borderRadius: 1,
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr', sm: '2fr 3fr auto' },
+                alignItems: 'center',
+                gap: 2
+              }}
+            >
+              <TextField
+                label="Platform"
+                value={account.platform}
+                onChange={(e) => onUpdateAccount(index, 'platform', e.target.value)}
+                disabled={!isEditing}
+                fullWidth
+              />
+              <TextField
+                label="URL/Username"
+                value={account.url}
+                onChange={(e) => onUpdateAccount(index, 'url', e.target.value)}
+                disabled={!isEditing}
+                fullWidth
+              />
+              {isEditing && (
+                <Tooltip title="Remove">
+                  <IconButton
+                    color="error"
+                    onClick={() => onRemoveAccount(index)}
+                    size="small"
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </Tooltip>
+              )}
+            </Box>
           ))
         ) : (
-          <Grid item xs={12}>
+          <Box>
             <Typography color="text.secondary" align="center">
               No social media accounts added yet.
               {isEditing && ' Click "Add Account" to add one.'}
             </Typography>
-          </Grid>
+          </Box>
         )}
-      </Grid>
+      </Box>
 
-      {/* Dialog for adding new social media */}
+      {/* Dialog to add new social media account */}
       <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
         <DialogTitle>Add Social Media Account</DialogTitle>
         <DialogContent>
@@ -160,9 +148,9 @@ const SocialMediaForm: React.FC<SocialMediaFormProps> = ({
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button 
-            onClick={handleAdd} 
-            variant="contained" 
+          <Button
+            onClick={handleAdd}
+            variant="contained"
             disabled={!newPlatform.trim() || !newUrl.trim()}
           >
             Add

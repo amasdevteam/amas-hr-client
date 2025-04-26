@@ -19,13 +19,13 @@ export const route: RouteObject = {
 			return { Component: Page };
 		  },
 		},
-		{
-		  path: "blank",
-		  lazy: async () => {
-			const { Page } = await import("@/pages/dashboard/blank");
-			return { Component: Page };
-		  },
-		},
+		// {
+		//   path: "blank",
+		//   lazy: async () => {
+		// 	const { Page } = await import("@/pages/dashboard/blank");
+		// 	return { Component: Page };
+		//   },
+		// },
 		{
 		  path: "performance",
 		  lazy: async () => {

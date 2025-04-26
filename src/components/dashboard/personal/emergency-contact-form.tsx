@@ -1,9 +1,7 @@
-// EmergencyContactForm.tsx
 import React from 'react';
 import {
   Box,
   Button,
-  Grid,
   TextField,
   Stack,
   Typography,
@@ -31,7 +29,7 @@ const EmergencyContactForm: React.FC<EmergencyContactFormProps> = ({
     <div>
       {contacts.map((contact, index) => (
         <Box 
-          key={index} 
+          key={index}
           sx={{ 
             mb: 4, 
             pb: 2, 
@@ -55,50 +53,48 @@ const EmergencyContactForm: React.FC<EmergencyContactFormProps> = ({
               </Button>
             )}
           </Stack>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Name"
-                value={contact.name}
-                onChange={(e) => onChange("emergencyContacts", "name", e.target.value, index)}
-                fullWidth
-                disabled={!isEditing}
-                required
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Relationship"
-                value={contact.relationship}
-                onChange={(e) => onChange("emergencyContacts", "relationship", e.target.value, index)}
-                fullWidth
-                disabled={!isEditing}
-                required
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Phone Number"
-                value={contact.phone}
-                onChange={(e) => onChange("emergencyContacts", "phone", e.target.value, index)}
-                fullWidth
-                disabled={!isEditing}
-                required
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Email"
-                value={contact.email}
-                onChange={(e) => onChange("emergencyContacts", "email", e.target.value, index)}
-                fullWidth
-                disabled={!isEditing}
-              />
-            </Grid>
-          </Grid>
+
+          {/* CSS Grid layout for the form fields */}
+          <Box 
+            display="grid"
+            gridTemplateColumns={{ xs: '1fr', sm: '1fr 1fr' }}
+            gap={2}
+          >
+            <TextField
+              label="Name"
+              value={contact.name}
+              onChange={(e) => onChange("emergencyContacts", "name", e.target.value, index)}
+              fullWidth
+              disabled={!isEditing}
+              required
+            />
+            <TextField
+              label="Relationship"
+              value={contact.relationship}
+              onChange={(e) => onChange("emergencyContacts", "relationship", e.target.value, index)}
+              fullWidth
+              disabled={!isEditing}
+              required
+            />
+            <TextField
+              label="Phone Number"
+              value={contact.phone}
+              onChange={(e) => onChange("emergencyContacts", "phone", e.target.value, index)}
+              fullWidth
+              disabled={!isEditing}
+              required
+            />
+            <TextField
+              label="Email"
+              value={contact.email}
+              onChange={(e) => onChange("emergencyContacts", "email", e.target.value, index)}
+              fullWidth
+              disabled={!isEditing}
+            />
+          </Box>
         </Box>
       ))}
-      
+
       {isEditing && (
         <Button 
           variant="outlined" 
