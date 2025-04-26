@@ -1,9 +1,8 @@
-import { Components } from "@mui/material"; // Ensure proper import from MUI
-import type { Theme } from "../types"; // Import the Theme type
-import { MuiAlert } from "./alert"; // Import your custom component
-import { MuiAutocomplete } from "./autocomplete"; // Import other components
-import { MuiStepConnector } from "./step-connector"; // Make sure the import path is correct
-import { MuiTimelineConnector } from "./timeline-connector"; // Make sure this is correctly imported
+import type { Components } from "@mui/material/styles";
+
+import type { Theme } from "../types";
+import { MuiAlert } from "./alert";
+import { MuiAutocomplete } from "./autocomplete";
 import { MuiAvatar } from "./avatar";
 import { MuiBackdrop } from "./backdrop";
 import { MuiButton } from "./button";
@@ -96,7 +95,6 @@ export const components = {
 	MuiTableHead,
 	MuiTablePagination,
 	MuiTabs,
-	MuiStepConnector,
 	MuiTimelineConnector,
 	MuiToggleButton,
 	MuiToggleButtonGroup,

@@ -25,7 +25,6 @@ export function OptionsPrimaryColor({ onChange, value }: OptionsPrimaryColorProp
 						{ label: "Neon Blue", value: "neonBlue", color: "#635bff" },
 						{ label: "Royal Blue", value: "royalBlue", color: "#5265ff" },
 						{ label: "Tomato Orange", value: "tomatoOrange", color: "#ff6c47" },
-						{ label: "Sky Blue", value: "skyBlue", color: "#66baff" }, // New color option
 					] satisfies { label: string; value: PrimaryColor; color: string }[]
 				).map((option) => (
 					<Option
